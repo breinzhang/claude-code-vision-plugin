@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.4 - 2026-06-16
+
+- Mark Hook success output as completed pre-analysis so the main model should answer from it instead of repeating image tool calls.
+
 ## 0.1.3 - 2026-06-16
 
 - Include the analysis pipeline version in cache keys so prompt fixes do not reuse stale success cache entries.

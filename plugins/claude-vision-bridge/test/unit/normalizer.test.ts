@@ -3,6 +3,23 @@ import { parseProviderOutput } from '../../src/normalize/parse-provider-output.j
 import { renderVisionMarkdown } from '../../src/normalize/render-markdown.js';
 
 describe('normalizer', () => {
+  it('renders successful vision output as completed pre-analysis for the main model', () => {
+    const parsed = parseProviderOutput({
+      mode: 'general',
+      text: 'The screenshot shows a terminal message.',
+    });
+
+    const markdown = renderVisionMarkdown({
+      sourceLabel: './screen.png',
+      providerLabel: 'omlx/gemma',
+      output: parsed,
+      maxOutputChars: 8000,
+    });
+
+    expect(markdown).toContain('Vision pre-analysis is already complete');
+    expect(markdown).toContain('Answer the user using this analysis');
+  });
+
   it('marks OCR prompt injection as untrusted data', () => {
     const parsed = parseProviderOutput({
       mode: 'ocr',

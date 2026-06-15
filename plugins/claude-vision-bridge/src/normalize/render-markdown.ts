@@ -9,6 +9,8 @@ export function renderVisionMarkdown(input: {
   const lines = [
     '## Vision Analysis',
     '',
+    'Vision pre-analysis is already complete. Answer the user using this analysis before calling any other image tools for the same source.',
+    '',
     '### Source',
     `- ${input.sourceLabel}`,
     '',

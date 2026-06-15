@@ -19,7 +19,7 @@ import { resolveClipboardImage } from '../sources/clipboard-source.js';
 import { resolvePathImage } from '../sources/path-source.js';
 import { downloadUrlImage } from '../sources/url-source.js';
 
-const CACHE_ANALYSIS_PIPELINE_VERSION = 'analysis-pipeline.v2';
+const CACHE_ANALYSIS_PIPELINE_VERSION = 'analysis-pipeline.v3';
 
 export class VisionService {
   private readonly cache: CacheManager;

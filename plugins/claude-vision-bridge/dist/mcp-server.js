@@ -25328,6 +25328,8 @@ function renderVisionMarkdown(input) {
   const lines = [
     "## Vision Analysis",
     "",
+    "Vision pre-analysis is already complete. Answer the user using this analysis before calling any other image tools for the same source.",
+    "",
     "### Source",
     `- ${input.sourceLabel}`,
     "",
@@ -25877,7 +25879,7 @@ function isAbortError(error51) {
 }
 
 // src/core/vision-service.ts
-var CACHE_ANALYSIS_PIPELINE_VERSION = "analysis-pipeline.v2";
+var CACHE_ANALYSIS_PIPELINE_VERSION = "analysis-pipeline.v3";
 var VisionService = class {
   constructor(config2) {
     this.config = config2;
@@ -26149,7 +26151,7 @@ async function handleMcpToolCall(call) {
 }
 async function createMcpServer() {
   const server = new Server(
-    { name: "vision-bridge", version: "0.1.3" },
+    { name: "vision-bridge", version: "0.1.4" },
     { capabilities: { tools: {} } }
   );
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -26166,7 +26168,7 @@ async function createMcpServer() {
 }
 function buildDoctorOutput(config2) {
   return {
-    version: "0.1.3",
+    version: "0.1.4",
     providerOrder: config2.providerOrder,
     remoteFallback: config2.allowRemoteFallback,
     pluginDataDir: config2.pluginDataDir,
