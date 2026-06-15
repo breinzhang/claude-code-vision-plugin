@@ -19,6 +19,8 @@ import { resolveClipboardImage } from '../sources/clipboard-source.js';
 import { resolvePathImage } from '../sources/path-source.js';
 import { downloadUrlImage } from '../sources/url-source.js';
 
+const CACHE_ANALYSIS_PIPELINE_VERSION = 'analysis-pipeline.v2';
+
 export class VisionService {
   private readonly cache: CacheManager;
 
@@ -46,6 +48,7 @@ export class VisionService {
       prompt: request.prompt,
       providerOrder: this.config.providerOrder,
       remoteFallbackAllowed: this.config.allowRemoteFallback,
+      analysisPipelineVersion: CACHE_ANALYSIS_PIPELINE_VERSION,
       schemaVersion: 'vision-artifact.v1',
     });
 

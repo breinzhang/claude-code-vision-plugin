@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 - 2026-06-16
+
+- Include the analysis pipeline version in cache keys so prompt fixes do not reuse stale success cache entries.
+
 ## 0.1.2 - 2026-06-16
 
 - Add a provider prompt wrapper that tells OpenAI-compatible VLMs the image is already attached, preventing local models from refusing path-style prompts.

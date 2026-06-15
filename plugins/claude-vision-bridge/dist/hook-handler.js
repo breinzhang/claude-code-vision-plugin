@@ -15574,6 +15574,7 @@ function isAbortError(error51) {
 }
 
 // src/core/vision-service.ts
+var CACHE_ANALYSIS_PIPELINE_VERSION = "analysis-pipeline.v2";
 var VisionService = class {
   constructor(config2) {
     this.config = config2;
@@ -15600,6 +15601,7 @@ var VisionService = class {
       prompt: request.prompt,
       providerOrder: this.config.providerOrder,
       remoteFallbackAllowed: this.config.allowRemoteFallback,
+      analysisPipelineVersion: CACHE_ANALYSIS_PIPELINE_VERSION,
       schemaVersion: "vision-artifact.v1"
     });
     const cachedSuccess = this.cache.readSuccess(key);

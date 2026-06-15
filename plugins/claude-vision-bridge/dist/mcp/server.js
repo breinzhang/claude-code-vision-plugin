@@ -146,7 +146,7 @@ export async function handleMcpToolCall(call) {
     throw new Error(`Unknown MCP tool: ${call.name}`);
 }
 export async function createMcpServer() {
-    const server = new Server({ name: 'vision-bridge', version: '0.1.2' }, { capabilities: { tools: {} } });
+    const server = new Server({ name: 'vision-bridge', version: '0.1.3' }, { capabilities: { tools: {} } });
     server.setRequestHandler(ListToolsRequestSchema, async () => ({
         tools: listVisionTools(),
     }));
@@ -161,7 +161,7 @@ export async function createMcpServer() {
 }
 function buildDoctorOutput(config) {
     return {
-        version: '0.1.2',
+        version: '0.1.3',
         providerOrder: config.providerOrder,
         remoteFallback: config.allowRemoteFallback,
         pluginDataDir: config.pluginDataDir,

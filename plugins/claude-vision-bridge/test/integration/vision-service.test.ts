@@ -1,8 +1,10 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { CacheManager } from '../../src/cache/cache-manager.js';
+import { sha256Hex, stableJsonHash } from '../../src/cache/hash.js';
 import { VisionService } from '../../src/core/vision-service.js';
-import type { AnalyzeImageRequest, PluginConfig, ProviderId } from '../../src/core/types.js';
+import type { AnalyzeImageRequest, PluginConfig, ProviderId, VisionArtifact } from '../../src/core/types.js';
 import { tinyPng } from '../fixtures/images.js';
 import { startHttpServer } from '../helpers/http-server.js';
 
@@ -37,6 +39,51 @@ describe('VisionService', () => {
           expect(first.timings.cacheHit).toBe(false);
           expect(second.timings.cacheHit).toBe(true);
           expect(second.analysis.intentSummary).toBe('A settings screen with an error banner.');
+        }
+        expect(calls).toBe(1);
+      } finally {
+        await server.close();
+      }
+    }));
+
+  it('does not reuse success cache entries from before provider prompt changes', async () =>
+    await withAsyncTempDir(async (dir) => {
+      let calls = 0;
+      const server = await startHttpServer((_req, res) => {
+        calls += 1;
+        res.setHeader('content-type', 'application/json');
+        res.end(JSON.stringify({ choices: [{ message: { content: 'Fresh provider analysis.' } }] }));
+      });
+
+      try {
+        const imagePath = join(dir, 'screen.png');
+        writeFileSync(imagePath, tinyPng);
+        const request = pathRequest(imagePath);
+        const legacyKey = stableJsonHash({
+          sha256: sha256Hex(tinyPng),
+          mode: request.mode,
+          prompt: request.prompt,
+          providerOrder: ['ollama'],
+          remoteFallbackAllowed: false,
+          schemaVersion: 'vision-artifact.v1',
+        });
+        new CacheManager({ dataDir: dir }).writeSuccess(legacyKey, successArtifact('Legacy cached analysis.'));
+
+        const service = new VisionService(
+          configFor(dir, {
+            providerOrder: ['ollama'],
+            providers: {
+              ollama: { id: 'ollama', baseUrl: `${server.url}/v1`, model: 'llava', enabled: true, remote: false },
+            },
+          }),
+        );
+
+        const result = await service.analyzeOne(request, { cwd: dir });
+
+        expect(result.artifactType).toBe('success');
+        if (result.artifactType === 'success') {
+          expect(result.timings.cacheHit).toBe(false);
+          expect(result.analysis.intentSummary).toBe('Fresh provider analysis.');
         }
         expect(calls).toBe(1);
       } finally {
@@ -326,6 +373,42 @@ function configFor(
       remote_openai: { id: 'remote_openai', baseUrl: '', model: '', enabled: false, remote: true },
       ...overrides.providers,
     },
+  };
+}
+
+function successArtifact(summary: string): VisionArtifact {
+  return {
+    artifactType: 'success',
+    schemaVersion: 'vision-artifact.v1',
+    source: {
+      type: 'path',
+      originalRef: 'legacy.png',
+      sha256: 'a'.repeat(64),
+      mime: 'image/png',
+      bytes: tinyPng.length,
+    },
+    provider: {
+      id: 'ollama',
+      model: 'llava',
+      fallbackDepth: 0,
+    },
+    timings: {
+      startedAt: '2026-06-16T00:00:00.000Z',
+      completedAt: '2026-06-16T00:00:01.000Z',
+      latencyMs: 1000,
+      cacheHit: false,
+    },
+    analysis: {
+      schemaVersion: 'vision.v1',
+      mode: 'general',
+      intentSummary: summary,
+      observations: [summary],
+      likelyTechnicalCauses: [],
+      recommendedCodeSearches: [],
+      redactions: [],
+      modelLimitations: [],
+    },
+    markdown: summary,
   };
 }
 

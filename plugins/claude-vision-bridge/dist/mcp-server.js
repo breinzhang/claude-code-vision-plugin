@@ -25877,6 +25877,7 @@ function isAbortError(error51) {
 }
 
 // src/core/vision-service.ts
+var CACHE_ANALYSIS_PIPELINE_VERSION = "analysis-pipeline.v2";
 var VisionService = class {
   constructor(config2) {
     this.config = config2;
@@ -25903,6 +25904,7 @@ var VisionService = class {
       prompt: request.prompt,
       providerOrder: this.config.providerOrder,
       remoteFallbackAllowed: this.config.allowRemoteFallback,
+      analysisPipelineVersion: CACHE_ANALYSIS_PIPELINE_VERSION,
       schemaVersion: "vision-artifact.v1"
     });
     const cachedSuccess = this.cache.readSuccess(key);
@@ -26147,7 +26149,7 @@ async function handleMcpToolCall(call) {
 }
 async function createMcpServer() {
   const server = new Server(
-    { name: "vision-bridge", version: "0.1.2" },
+    { name: "vision-bridge", version: "0.1.3" },
     { capabilities: { tools: {} } }
   );
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -26164,7 +26166,7 @@ async function createMcpServer() {
 }
 function buildDoctorOutput(config2) {
   return {
-    version: "0.1.2",
+    version: "0.1.3",
     providerOrder: config2.providerOrder,
     remoteFallback: config2.allowRemoteFallback,
     pluginDataDir: config2.pluginDataDir,
