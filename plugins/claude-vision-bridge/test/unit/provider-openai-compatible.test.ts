@@ -158,10 +158,9 @@ describe('OpenAI-compatible vision provider', () => {
       expect(requests[0].method).toBe('POST');
       expect(requests[0].url).toBe('/v1/chat/completions');
       expect(requests[0].body.model).toBe('llava');
-      expect(requests[0].body.messages?.[0]?.content?.[0]).toEqual({
-        type: 'text',
-        text: 'Describe this image.',
-      });
+      expect(requests[0].body.messages?.[0]?.content?.[0]?.type).toBe('text');
+      expect(requests[0].body.messages?.[0]?.content?.[0]?.text).toContain('attached image');
+      expect(requests[0].body.messages?.[0]?.content?.[0]?.text).toContain('Describe this image.');
       expect(requests[0].body.messages?.[0]?.content?.[1]).toEqual({
         type: 'image_url',
         image_url: {

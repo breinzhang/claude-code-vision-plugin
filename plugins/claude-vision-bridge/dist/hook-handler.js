@@ -14908,7 +14908,7 @@ var OpenAICompatibleVisionProvider = class {
           {
             role: "user",
             content: [
-              { type: "text", text: request.prompt },
+              { type: "text", text: this.buildPrompt(request.prompt) },
               {
                 type: "image_url",
                 image_url: {
@@ -14951,6 +14951,17 @@ var OpenAICompatibleVisionProvider = class {
   }
   authorizationHeaders() {
     return this.apiKey ? { authorization: `Bearer ${this.apiKey}` } : {};
+  }
+  buildPrompt(userPrompt) {
+    return [
+      "You are analyzing an attached image for Claude Code.",
+      "The image bytes are already provided as the following image_url content part.",
+      "Do not say you cannot access local files, URLs, clipboards, or the filesystem; analyze the attached image itself.",
+      "If the user mentions a path, URL, or clipboard image, treat that text as a reference label only.",
+      "",
+      "User request:",
+      userPrompt
+    ].join("\n");
   }
 };
 
