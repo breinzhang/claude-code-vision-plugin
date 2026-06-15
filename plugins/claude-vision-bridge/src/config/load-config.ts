@@ -8,6 +8,10 @@ function splitCsv(value: string | undefined): string[] {
     .filter((item) => item.length > 0);
 }
 
+function normalizeProviderOrder(value: string | undefined): ProviderId[] {
+  return splitCsv(value).map((item) => item.toLowerCase().replace(/-/g, '_') as ProviderId);
+}
+
 function boolEnv(value: string | undefined, fallback: boolean): boolean {
   if (value === undefined || value === '') return fallback;
   return value === '1' || value.toLowerCase() === 'true';
@@ -19,8 +23,8 @@ function numEnv(value: string | undefined, fallback: number): number {
 }
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): PluginConfig {
-  const providerOrder = splitCsv(env.CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER);
-  const parsedProviderOrder = providerOrder.length > 0 ? (providerOrder as ProviderId[]) : undefined;
+  const providerOrder = normalizeProviderOrder(env.CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER);
+  const parsedProviderOrder = providerOrder.length > 0 ? providerOrder : undefined;
   const allowRemoteFallback = boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_REMOTE_FALLBACK, false);
 
   return PluginConfigSchema.parse({
@@ -42,6 +46,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PluginConfig {
         id: 'ollama',
         baseUrl: env.CLAUDE_PLUGIN_OPTION_OLLAMA_BASE_URL ?? 'http://127.0.0.1:11434/v1',
         model: env.CLAUDE_PLUGIN_OPTION_OLLAMA_MODEL ?? 'llava',
+        apiKey: env.CLAUDE_PLUGIN_OPTION_OLLAMA_API_KEY || undefined,
         enabled: true,
         remote: false,
       },
@@ -49,6 +54,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PluginConfig {
         id: 'omlx',
         baseUrl: env.CLAUDE_PLUGIN_OPTION_OMLX_BASE_URL ?? 'http://127.0.0.1:8000/v1',
         model: env.CLAUDE_PLUGIN_OPTION_OMLX_MODEL ?? 'mlx-vlm',
+        apiKey: env.CLAUDE_PLUGIN_OPTION_OMLX_API_KEY || undefined,
         enabled: true,
         remote: false,
       },
@@ -56,6 +62,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PluginConfig {
         id: 'llama_cpp',
         baseUrl: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_BASE_URL ?? 'http://127.0.0.1:8080/v1',
         model: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_MODEL ?? 'llava',
+        apiKey: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_API_KEY || undefined,
         enabled: true,
         remote: false,
       },

@@ -14886,7 +14886,10 @@ var OpenAICompatibleVisionProvider = class {
       return { providerId: this.id, ok: false, message: "baseUrl or model is not configured" };
     }
     try {
-      const response = await this.fetchWithTimeout(`${this.baseUrl}/models`, { method: "GET" });
+      const response = await this.fetchWithTimeout(`${this.baseUrl}/models`, {
+        method: "GET",
+        headers: this.authorizationHeaders()
+      });
       return { providerId: this.id, ok: response.ok, message: response.ok ? "ok" : `HTTP ${response.status}` };
     } catch (error51) {
       return { providerId: this.id, ok: false, message: error51 instanceof Error ? error51.message : String(error51) };
@@ -14897,7 +14900,7 @@ var OpenAICompatibleVisionProvider = class {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        ...this.apiKey ? { authorization: `Bearer ${this.apiKey}` } : {}
+        ...this.authorizationHeaders()
       },
       body: JSON.stringify({
         model: this.model,
@@ -14945,6 +14948,9 @@ var OpenAICompatibleVisionProvider = class {
     } finally {
       clearTimeout(timeout);
     }
+  }
+  authorizationHeaders() {
+    return this.apiKey ? { authorization: `Bearer ${this.apiKey}` } : {};
   }
 };
 
@@ -15691,6 +15697,9 @@ function sourceFailureDetails(source) {
 function splitCsv(value) {
   return (value ?? "").split(",").map((item) => item.trim()).filter((item) => item.length > 0);
 }
+function normalizeProviderOrder(value) {
+  return splitCsv(value).map((item) => item.toLowerCase().replace(/-/g, "_"));
+}
 function boolEnv(value, fallback) {
   if (value === void 0 || value === "") return fallback;
   return value === "1" || value.toLowerCase() === "true";
@@ -15700,7 +15709,7 @@ function numEnv(value, fallback) {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 function loadConfig(env = process.env) {
-  const providerOrder = splitCsv(env.CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER);
+  const providerOrder = normalizeProviderOrder(env.CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER);
   const parsedProviderOrder = providerOrder.length > 0 ? providerOrder : void 0;
   const allowRemoteFallback = boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_REMOTE_FALLBACK, false);
   return PluginConfigSchema.parse({
@@ -15722,6 +15731,7 @@ function loadConfig(env = process.env) {
         id: "ollama",
         baseUrl: env.CLAUDE_PLUGIN_OPTION_OLLAMA_BASE_URL ?? "http://127.0.0.1:11434/v1",
         model: env.CLAUDE_PLUGIN_OPTION_OLLAMA_MODEL ?? "llava",
+        apiKey: env.CLAUDE_PLUGIN_OPTION_OLLAMA_API_KEY || void 0,
         enabled: true,
         remote: false
       },
@@ -15729,6 +15739,7 @@ function loadConfig(env = process.env) {
         id: "omlx",
         baseUrl: env.CLAUDE_PLUGIN_OPTION_OMLX_BASE_URL ?? "http://127.0.0.1:8000/v1",
         model: env.CLAUDE_PLUGIN_OPTION_OMLX_MODEL ?? "mlx-vlm",
+        apiKey: env.CLAUDE_PLUGIN_OPTION_OMLX_API_KEY || void 0,
         enabled: true,
         remote: false
       },
@@ -15736,6 +15747,7 @@ function loadConfig(env = process.env) {
         id: "llama_cpp",
         baseUrl: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_BASE_URL ?? "http://127.0.0.1:8080/v1",
         model: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_MODEL ?? "llava",
+        apiKey: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_API_KEY || void 0,
         enabled: true,
         remote: false
       },

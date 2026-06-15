@@ -17,7 +17,10 @@ export class OpenAICompatibleVisionProvider {
             return { providerId: this.id, ok: false, message: 'baseUrl or model is not configured' };
         }
         try {
-            const response = await this.fetchWithTimeout(`${this.baseUrl}/models`, { method: 'GET' });
+            const response = await this.fetchWithTimeout(`${this.baseUrl}/models`, {
+                method: 'GET',
+                headers: this.authorizationHeaders(),
+            });
             return { providerId: this.id, ok: response.ok, message: response.ok ? 'ok' : `HTTP ${response.status}` };
         }
         catch (error) {
@@ -29,7 +32,7 @@ export class OpenAICompatibleVisionProvider {
             method: 'POST',
             headers: {
                 'content-type': 'application/json',
-                ...(this.apiKey ? { authorization: `Bearer ${this.apiKey}` } : {}),
+                ...this.authorizationHeaders(),
             },
             body: JSON.stringify({
                 model: this.model,
@@ -79,6 +82,9 @@ export class OpenAICompatibleVisionProvider {
         finally {
             clearTimeout(timeout);
         }
+    }
+    authorizationHeaders() {
+        return this.apiKey ? { authorization: `Bearer ${this.apiKey}` } : {};
     }
 }
 //# sourceMappingURL=openai-compatible.js.map

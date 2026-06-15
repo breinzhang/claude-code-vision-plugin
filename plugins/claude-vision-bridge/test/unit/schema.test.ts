@@ -87,6 +87,18 @@ describe('shared schemas', () => {
     });
   });
 
+  it('normalizes provider order option casing from plugin configuration', () => {
+    const config = loadConfig({
+      CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER: 'oMLX',
+      CLAUDE_PLUGIN_OPTION_OMLX_MODEL: 'gemma-4-12B-it-4bit',
+      CLAUDE_PLUGIN_OPTION_OMLX_API_KEY: 'omlx-secret',
+    });
+
+    expect(config.providerOrder).toEqual(['omlx']);
+    expect(config.providers.omlx.model).toBe('gemma-4-12B-it-4bit');
+    expect(config.providers.omlx.apiKey).toBe('omlx-secret');
+  });
+
   it('accepts success and failure artifact envelopes', () => {
     expect(
       VisionArtifactSchema.parse({

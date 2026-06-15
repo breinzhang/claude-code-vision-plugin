@@ -197,6 +197,30 @@ describe('OpenAI-compatible vision provider', () => {
     }
   });
 
+  it('sends bearer authorization on provider health checks when an API key is configured', async () => {
+    const requests: CapturedRequest[] = [];
+    const server = await startChatServer({ capture: (request) => requests.push(request) });
+
+    try {
+      const provider = new OpenAICompatibleVisionProvider({
+        id: 'omlx',
+        baseUrl: `${server.url}/v1`,
+        model: 'gemma-4-12B-it-4bit',
+        apiKey: 'omlx-secret',
+        timeoutMs: 5000,
+      });
+
+      const result = await provider.healthCheck();
+
+      expect(result.ok).toBe(true);
+      expect(requests[0].method).toBe('GET');
+      expect(requests[0].url).toBe('/v1/models');
+      expect(requests[0].headers.authorization).toBe('Bearer omlx-secret');
+    } finally {
+      await server.close();
+    }
+  });
+
   it.each([
     { choices: [] },
     { choices: [{ message: { content: '' } }] },

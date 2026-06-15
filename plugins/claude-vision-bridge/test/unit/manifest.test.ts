@@ -30,6 +30,7 @@ describe('plugin and marketplace manifests', () => {
       displayName: string;
       license: string;
       defaultEnabled: boolean;
+      userConfig: Record<string, { sensitive?: boolean }>;
       hooks?: string;
       mcpServers?: string;
     };
@@ -38,6 +39,7 @@ describe('plugin and marketplace manifests', () => {
     expect(plugin.displayName).toBe('Claude Vision Bridge');
     expect(plugin.license).toBe('MIT');
     expect(plugin.defaultEnabled).toBe(false);
+    expect(plugin.userConfig.omlx_api_key).toMatchObject({ sensitive: true });
     expect(plugin).not.toHaveProperty('hooks');
     expect(plugin).not.toHaveProperty('mcpServers');
   });

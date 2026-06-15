@@ -1,7 +1,7 @@
 {
   "name": "claude-vision-bridge",
   "displayName": "Claude Vision Bridge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Inject structured vision context into Claude Code using local VLM providers and optional OpenAI-compatible remote fallback.",
   "author": {
     "name": "brein"
@@ -27,6 +27,13 @@
       "description": "Ollama vision model name.",
       "default": "llava"
     },
+    "ollama_api_key": {
+      "type": "string",
+      "title": "Ollama API key",
+      "description": "Optional API key for the Ollama OpenAI-compatible endpoint.",
+      "sensitive": true,
+      "default": ""
+    },
     "omlx_base_url": {
       "type": "string",
       "title": "oMLX base URL",
@@ -39,6 +46,13 @@
       "description": "oMLX vision model name.",
       "default": "mlx-vlm"
     },
+    "omlx_api_key": {
+      "type": "string",
+      "title": "oMLX API key",
+      "description": "Optional API key for the oMLX OpenAI-compatible endpoint.",
+      "sensitive": true,
+      "default": ""
+    },
     "llama_cpp_base_url": {
       "type": "string",
       "title": "llama.cpp base URL",
@@ -50,6 +64,13 @@
       "title": "llama.cpp model",
       "description": "llama.cpp vision model name.",
       "default": "llava"
+    },
+    "llama_cpp_api_key": {
+      "type": "string",
+      "title": "llama.cpp API key",
+      "description": "Optional API key for the llama.cpp OpenAI-compatible endpoint.",
+      "sensitive": true,
+      "default": ""
     },
     "remote_openai_base_url": {
       "type": "string",

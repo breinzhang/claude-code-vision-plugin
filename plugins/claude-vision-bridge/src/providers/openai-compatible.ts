@@ -28,7 +28,10 @@ export class OpenAICompatibleVisionProvider implements VisionProvider {
     }
 
     try {
-      const response = await this.fetchWithTimeout(`${this.baseUrl}/models`, { method: 'GET' });
+      const response = await this.fetchWithTimeout(`${this.baseUrl}/models`, {
+        method: 'GET',
+        headers: this.authorizationHeaders(),
+      });
       return { providerId: this.id, ok: response.ok, message: response.ok ? 'ok' : `HTTP ${response.status}` };
     } catch (error) {
       return { providerId: this.id, ok: false, message: error instanceof Error ? error.message : String(error) };
@@ -40,7 +43,7 @@ export class OpenAICompatibleVisionProvider implements VisionProvider {
       method: 'POST',
       headers: {
         'content-type': 'application/json',
-        ...(this.apiKey ? { authorization: `Bearer ${this.apiKey}` } : {}),
+        ...this.authorizationHeaders(),
       },
       body: JSON.stringify({
         model: this.model,
@@ -93,5 +96,9 @@ export class OpenAICompatibleVisionProvider implements VisionProvider {
     } finally {
       clearTimeout(timeout);
     }
+  }
+
+  private authorizationHeaders(): Record<string, string> {
+    return this.apiKey ? { authorization: `Bearer ${this.apiKey}` } : {};
   }
 }

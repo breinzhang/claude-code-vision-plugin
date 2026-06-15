@@ -66,6 +66,9 @@ Defaults:
 - llama.cpp: `http://127.0.0.1:8080/v1`, model `llava`
 - Remote OpenAI-compatible endpoint: user configured, disabled by default
 
+If a local endpoint requires authentication, configure the matching sensitive
+key option: `ollama_api_key`, `omlx_api_key`, or `llama_cpp_api_key`.
+
 Remote fallback must be explicitly enabled with `allow_remote_fallback`.
 
 ## Hook Usage

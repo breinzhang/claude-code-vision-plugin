@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 - 2026-06-16
+
+- Normalize `provider_order` values before validation so plugin configuration accepts casing like `oMLX`.
+- Add optional API key configuration for local OpenAI-compatible providers and send it during provider health checks.
+
 ## 0.1.0 - 2026-06-14
 
 - Initial Claude Vision Bridge plugin release under the MIT license.

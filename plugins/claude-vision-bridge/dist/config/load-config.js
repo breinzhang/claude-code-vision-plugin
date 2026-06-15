@@ -5,6 +5,9 @@ function splitCsv(value) {
         .map((item) => item.trim())
         .filter((item) => item.length > 0);
 }
+function normalizeProviderOrder(value) {
+    return splitCsv(value).map((item) => item.toLowerCase().replace(/-/g, '_'));
+}
 function boolEnv(value, fallback) {
     if (value === undefined || value === '')
         return fallback;
@@ -15,7 +18,7 @@ function numEnv(value, fallback) {
     return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 export function loadConfig(env = process.env) {
-    const providerOrder = splitCsv(env.CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER);
+    const providerOrder = normalizeProviderOrder(env.CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER);
     const parsedProviderOrder = providerOrder.length > 0 ? providerOrder : undefined;
     const allowRemoteFallback = boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_REMOTE_FALLBACK, false);
     return PluginConfigSchema.parse({
@@ -37,6 +40,7 @@ export function loadConfig(env = process.env) {
                 id: 'ollama',
                 baseUrl: env.CLAUDE_PLUGIN_OPTION_OLLAMA_BASE_URL ?? 'http://127.0.0.1:11434/v1',
                 model: env.CLAUDE_PLUGIN_OPTION_OLLAMA_MODEL ?? 'llava',
+                apiKey: env.CLAUDE_PLUGIN_OPTION_OLLAMA_API_KEY || undefined,
                 enabled: true,
                 remote: false,
             },
@@ -44,6 +48,7 @@ export function loadConfig(env = process.env) {
                 id: 'omlx',
                 baseUrl: env.CLAUDE_PLUGIN_OPTION_OMLX_BASE_URL ?? 'http://127.0.0.1:8000/v1',
                 model: env.CLAUDE_PLUGIN_OPTION_OMLX_MODEL ?? 'mlx-vlm',
+                apiKey: env.CLAUDE_PLUGIN_OPTION_OMLX_API_KEY || undefined,
                 enabled: true,
                 remote: false,
             },
@@ -51,6 +56,7 @@ export function loadConfig(env = process.env) {
                 id: 'llama_cpp',
                 baseUrl: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_BASE_URL ?? 'http://127.0.0.1:8080/v1',
                 model: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_MODEL ?? 'llava',
+                apiKey: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_API_KEY || undefined,
                 enabled: true,
                 remote: false,
             },

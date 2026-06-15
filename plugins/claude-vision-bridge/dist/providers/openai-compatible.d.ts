@@ -16,4 +16,5 @@ export declare class OpenAICompatibleVisionProvider implements VisionProvider {
     healthCheck(): Promise<ProviderHealth>;
     analyze(request: ProviderAnalyzeRequest): Promise<ProviderAnalyzeResult>;
     private fetchWithTimeout;
+    private authorizationHeaders;
 }
