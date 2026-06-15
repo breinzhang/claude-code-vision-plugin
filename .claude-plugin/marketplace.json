@@ -1,0 +1,16 @@
+{
+  "name": "brein-claude-tools",
+  "description": "Claude Code plugins maintained by brein.",
+  "owner": {
+    "name": "brein"
+  },
+  "plugins": [
+    {
+      "name": "claude-vision-bridge",
+      "source": "./plugins/claude-vision-bridge",
+      "description": "Vision bridge for Claude Code with local VLM providers and optional remote fallback.",
+      "category": "developer-tools",
+      "tags": ["vision", "vlm", "mcp", "hooks"]
+    }
+  ]
+}

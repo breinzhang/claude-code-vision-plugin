@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "vision-bridge": {
+      "command": "node",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/dist/mcp-server.js"],
+      "env": {
+        "CLAUDE_VISION_PLUGIN_DATA": "${CLAUDE_PLUGIN_DATA}"
+      }
+    }
+  }
+}

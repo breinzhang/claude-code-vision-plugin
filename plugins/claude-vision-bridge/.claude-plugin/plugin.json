@@ -1,0 +1,144 @@
+{
+  "name": "claude-vision-bridge",
+  "displayName": "Claude Vision Bridge",
+  "version": "0.1.0",
+  "description": "Inject structured vision context into Claude Code using local VLM providers and optional OpenAI-compatible remote fallback.",
+  "author": {
+    "name": "brein"
+  },
+  "license": "MIT",
+  "defaultEnabled": false,
+  "userConfig": {
+    "provider_order": {
+      "type": "string",
+      "title": "Provider order",
+      "description": "Comma-separated provider order.",
+      "default": "ollama,omlx,llama_cpp,remote_openai"
+    },
+    "ollama_base_url": {
+      "type": "string",
+      "title": "Ollama base URL",
+      "description": "OpenAI-compatible Ollama endpoint.",
+      "default": "http://127.0.0.1:11434/v1"
+    },
+    "ollama_model": {
+      "type": "string",
+      "title": "Ollama model",
+      "description": "Ollama vision model name.",
+      "default": "llava"
+    },
+    "omlx_base_url": {
+      "type": "string",
+      "title": "oMLX base URL",
+      "description": "OpenAI-compatible oMLX endpoint.",
+      "default": "http://127.0.0.1:8000/v1"
+    },
+    "omlx_model": {
+      "type": "string",
+      "title": "oMLX model",
+      "description": "oMLX vision model name.",
+      "default": "mlx-vlm"
+    },
+    "llama_cpp_base_url": {
+      "type": "string",
+      "title": "llama.cpp base URL",
+      "description": "OpenAI-compatible llama.cpp endpoint.",
+      "default": "http://127.0.0.1:8080/v1"
+    },
+    "llama_cpp_model": {
+      "type": "string",
+      "title": "llama.cpp model",
+      "description": "llama.cpp vision model name.",
+      "default": "llava"
+    },
+    "remote_openai_base_url": {
+      "type": "string",
+      "title": "Remote OpenAI-compatible base URL",
+      "description": "Remote OpenAI-compatible vision endpoint.",
+      "default": ""
+    },
+    "remote_openai_api_key": {
+      "type": "string",
+      "title": "Remote API key",
+      "description": "API key for the remote OpenAI-compatible vision endpoint.",
+      "sensitive": true,
+      "default": ""
+    },
+    "remote_openai_model": {
+      "type": "string",
+      "title": "Remote vision model",
+      "description": "Remote OpenAI-compatible vision model name.",
+      "default": ""
+    },
+    "allow_remote_fallback": {
+      "type": "boolean",
+      "title": "Allow remote fallback",
+      "description": "Allow image upload to remote OpenAI-compatible vision endpoint after local providers fail.",
+      "default": false
+    },
+    "allow_http_urls": {
+      "type": "boolean",
+      "title": "Allow HTTP image URLs",
+      "description": "Allow non-HTTPS image URLs.",
+      "default": false
+    },
+    "allow_private_network_urls": {
+      "type": "boolean",
+      "title": "Allow private network image URLs",
+      "description": "Allow localhost, loopback, private network, and link-local image URLs.",
+      "default": false
+    },
+    "allowed_directories": {
+      "type": "string",
+      "title": "Additional allowed directories",
+      "description": "Comma-separated extra directories that images may be read from.",
+      "default": ""
+    },
+    "denied_directories": {
+      "type": "string",
+      "title": "Additional denied directories",
+      "description": "Comma-separated extra directories that images may not be read from.",
+      "default": ""
+    },
+    "max_image_bytes": {
+      "type": "number",
+      "title": "Maximum image bytes",
+      "description": "Maximum image size accepted by Hook and MCP.",
+      "default": 10485760,
+      "min": 1024,
+      "max": 52428800
+    },
+    "hook_timeout_ms": {
+      "type": "number",
+      "title": "Hook timeout milliseconds",
+      "description": "Internal Hook analysis budget.",
+      "default": 30000,
+      "min": 1000,
+      "max": 30000
+    },
+    "provider_timeout_ms": {
+      "type": "number",
+      "title": "Provider timeout milliseconds",
+      "description": "Per-provider HTTP request timeout.",
+      "default": 20000,
+      "min": 1000,
+      "max": 60000
+    },
+    "mcp_timeout_ms": {
+      "type": "number",
+      "title": "MCP timeout milliseconds",
+      "description": "MCP analyze_image request timeout.",
+      "default": 60000,
+      "min": 1000,
+      "max": 120000
+    },
+    "max_output_chars": {
+      "type": "number",
+      "title": "Maximum output characters",
+      "description": "Maximum Markdown characters injected or returned.",
+      "default": 8000,
+      "min": 1000,
+      "max": 10000
+    }
+  }
+}

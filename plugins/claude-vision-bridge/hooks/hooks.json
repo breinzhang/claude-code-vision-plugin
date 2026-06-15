@@ -1,0 +1,18 @@
+{
+  "description": "Inject vision analysis context before user prompts are submitted.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/dist/hook-handler.js"],
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
