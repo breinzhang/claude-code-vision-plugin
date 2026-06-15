@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 - 2026-06-16
+
+- Add a provider prompt wrapper that tells OpenAI-compatible VLMs the image is already attached, preventing local models from refusing path-style prompts.
+
 ## 0.1.1 - 2026-06-16
 
 - Normalize `provider_order` values before validation so plugin configuration accepts casing like `oMLX`.
