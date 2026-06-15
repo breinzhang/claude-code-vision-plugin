@@ -23,7 +23,19 @@ The plugin is disabled by default. Enable it only after reviewing its configurat
 
 ## Manual Install
 
-From this repository:
+For a manual, session-scoped load without adding the marketplace:
+
+```bash
+git clone https://github.com/breinzhang/claude-code-vision-plugin.git
+cd claude-code-vision-plugin/plugins/claude-vision-bridge
+npm ci
+npm run build
+claude --plugin-dir .
+```
+
+`--plugin-dir` loads the plugin for that Claude Code session. Use the marketplace install for persistent user/project installation.
+
+From an already-cloned repository:
 
 ```bash
 cd plugins/claude-vision-bridge
