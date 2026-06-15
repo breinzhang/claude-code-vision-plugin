@@ -78,6 +78,18 @@ describe('Hook handler', () => {
     });
   });
 
+  it('infers OCR mode when the prompt asks to extract visible text', () => {
+    const requests = parseHookInputToRequests({
+      session_id: 's',
+      cwd: process.cwd(),
+      hook_event_name: 'UserPromptSubmit',
+      prompt: '只做OCR：请提取 ./screen.png 图片里看得见的文字',
+    });
+
+    expect(requests).toHaveLength(1);
+    expect(requests[0].mode).toBe('ocr');
+  });
+
   it('renders Hook JSON with suppressOutput and additionalContext', () => {
     const output = buildHookOutput(['## Vision Analysis']);
 

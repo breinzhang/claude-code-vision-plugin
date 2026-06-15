@@ -180,7 +180,7 @@ export async function handleMcpToolCall(call: ToolCall): Promise<TextToolResult 
 
 export async function createMcpServer(): Promise<Server> {
   const server = new Server(
-    { name: 'vision-bridge', version: '0.1.4' },
+    { name: 'vision-bridge', version: '0.1.5' },
     { capabilities: { tools: {} } },
   );
 
@@ -201,7 +201,7 @@ export async function createMcpServer(): Promise<Server> {
 
 function buildDoctorOutput(config: PluginConfig): Record<string, unknown> {
   return {
-    version: '0.1.4',
+    version: '0.1.5',
     providerOrder: config.providerOrder,
     remoteFallback: config.allowRemoteFallback,
     pluginDataDir: config.pluginDataDir,

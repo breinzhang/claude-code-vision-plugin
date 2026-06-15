@@ -160,6 +160,7 @@ describe('OpenAI-compatible vision provider', () => {
       expect(requests[0].body.model).toBe('llava');
       expect(requests[0].body.messages?.[0]?.content?.[0]?.type).toBe('text');
       expect(requests[0].body.messages?.[0]?.content?.[0]?.text).toContain('attached image');
+      expect(requests[0].body.messages?.[0]?.content?.[0]?.text).toContain('If the user asks for OCR');
       expect(requests[0].body.messages?.[0]?.content?.[0]?.text).toContain('Describe this image.');
       expect(requests[0].body.messages?.[0]?.content?.[1]).toEqual({
         type: 'image_url',

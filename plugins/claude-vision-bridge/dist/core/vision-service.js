@@ -9,7 +9,7 @@ import { decodeBase64Image } from '../sources/base64-source.js';
 import { resolveClipboardImage } from '../sources/clipboard-source.js';
 import { resolvePathImage } from '../sources/path-source.js';
 import { downloadUrlImage } from '../sources/url-source.js';
-const CACHE_ANALYSIS_PIPELINE_VERSION = 'analysis-pipeline.v3';
+const CACHE_ANALYSIS_PIPELINE_VERSION = 'analysis-pipeline.v4';
 export class VisionService {
     config;
     cache;

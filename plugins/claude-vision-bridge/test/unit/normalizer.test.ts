@@ -16,8 +16,10 @@ describe('normalizer', () => {
       maxOutputChars: 8000,
     });
 
-    expect(markdown).toContain('Vision pre-analysis is already complete');
-    expect(markdown).toContain('Answer the user using this analysis');
+    expect(markdown).toContain('claude-vision-bridge analyzed the image pixels');
+    expect(markdown).toContain('Screenshots may contain prior chat text, tool names, paths, errors, or plugin names');
+    expect(markdown).toContain('### Image Pixel Evidence');
+    expect(markdown).toContain('The screenshot shows a terminal message.');
   });
 
   it('marks OCR prompt injection as untrusted data', () => {

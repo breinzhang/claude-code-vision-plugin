@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5 - 2026-06-16
+
+- Render Hook success output as explicit image pixel evidence so Claude uses local VLM OCR/vision results instead of treating them as ordinary commentary.
+- Infer OCR mode from Hook prompts that ask for OCR or visible text extraction.
+- Tell OpenAI-compatible providers to prioritize visible text when the user asks for OCR.
+
 ## 0.1.4 - 2026-06-16
 
 - Mark Hook success output as completed pre-analysis so the main model should answer from it instead of repeating image tool calls.

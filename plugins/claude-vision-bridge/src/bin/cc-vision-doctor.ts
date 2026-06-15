@@ -15,7 +15,7 @@ async function main(): Promise<void> {
   process.stdout.write(
     `${JSON.stringify(
       sanitizeDoctorOutput({
-        version: '0.1.4',
+        version: '0.1.5',
         providerOrder: config.providerOrder,
         remoteFallback: config.allowRemoteFallback,
         pluginDataDir: config.pluginDataDir,

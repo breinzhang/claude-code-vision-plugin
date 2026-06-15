@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { AnalyzeImageRequestSchema } from '../core/schema.js';
-import type { AnalyzeImageRequest, AnalyzeImageResult } from '../core/types.js';
+import type { AnalyzeImageRequest, AnalyzeImageResult, VisionMode } from '../core/types.js';
 import { VisionService } from '../core/vision-service.js';
 import { loadConfig } from '../config/load-config.js';
 import { buildFailureArtifact } from '../failure/failure-artifact.js';
@@ -17,15 +17,25 @@ export interface UserPromptSubmitInput {
 
 export function parseHookInputToRequests(input: UserPromptSubmitInput): AnalyzeImageRequest[] {
   const sources = extractSourcesFromPrompt(input.prompt);
+  const mode = inferHookMode(input.prompt);
   return sources.map((source) =>
     AnalyzeImageRequestSchema.parse({
       source,
-      mode: 'general',
+      mode,
       prompt: input.prompt,
       timeoutMs: Number(process.env.CLAUDE_PLUGIN_OPTION_HOOK_TIMEOUT_MS ?? 30000),
       maxOutputChars: Number(process.env.CLAUDE_PLUGIN_OPTION_MAX_OUTPUT_CHARS ?? 8000),
     }),
   );
+}
+
+function inferHookMode(prompt: string): VisionMode {
+  if (/\bocr\b/i.test(prompt)) return 'ocr';
+  if (/(提取|识别|读取|转写).{0,12}(文字|文本)/.test(prompt)) return 'ocr';
+  if (/(看得见|可见).{0,8}(文字|文本)/.test(prompt)) return 'ocr';
+  if (/\b(extract|read|transcribe)\b.{0,24}\b(visible\s+)?text\b/i.test(prompt)) return 'ocr';
+  if (/\bvisible\s+text\b/i.test(prompt)) return 'ocr';
+  return 'general';
 }
 
 export function buildHookOutput(markdowns: string[]): {

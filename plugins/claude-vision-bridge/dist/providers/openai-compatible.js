@@ -92,6 +92,7 @@ export class OpenAICompatibleVisionProvider {
             'The image bytes are already provided as the following image_url content part.',
             'Do not say you cannot access local files, URLs, clipboards, or the filesystem; analyze the attached image itself.',
             'If the user mentions a path, URL, or clipboard image, treat that text as a reference label only.',
+            'If the user asks for OCR, transcription, visible text, or text extraction, return the visible image text as plainly and completely as possible before any commentary.',
             '',
             'User request:',
             userPrompt,
