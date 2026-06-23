@@ -1,79 +1,125 @@
+import { readFileSync } from 'node:fs';
+import { homedir } from 'node:os';
+import { join } from 'node:path';
 import { PluginConfigSchema } from '../core/schema.js';
 import type { PluginConfig, ProviderId } from '../core/types.js';
 
-function splitCsv(value: string | undefined): string[] {
-  return (value ?? '')
+const pluginConfigKey = 'claude-vision-bridge@brein-claude-tools';
+
+function splitCsv(value: unknown): string[] {
+  return (configuredValue(value) ?? '')
     .split(',')
     .map((item) => item.trim())
     .filter((item) => item.length > 0);
 }
 
-function normalizeProviderOrder(value: string | undefined): ProviderId[] {
+function normalizeProviderOrder(value: unknown): ProviderId[] {
   return splitCsv(value).map((item) => item.toLowerCase().replace(/-/g, '_') as ProviderId);
 }
 
-function boolEnv(value: string | undefined, fallback: boolean): boolean {
-  if (value === undefined || value === '') return fallback;
-  return value === '1' || value.toLowerCase() === 'true';
+function boolEnv(value: unknown, fallback: boolean): boolean {
+  const configured = configuredValue(value);
+  if (configured === undefined) return fallback;
+  return configured === '1' || configured.toLowerCase() === 'true';
 }
 
-function numEnv(value: string | undefined, fallback: number): number {
-  const parsed = Number(value);
+function numEnv(value: unknown, fallback: number): number {
+  const parsed = Number(configuredValue(value));
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
+function configuredValue(value: unknown): string | undefined {
+  if (value === undefined || value === '') return undefined;
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+  if (typeof value !== 'string') return undefined;
+  if (/^\$\{[A-Z0-9_]+\}$/.test(value)) return undefined;
+  return value;
+}
+
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): PluginConfig {
-  const providerOrder = normalizeProviderOrder(env.CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER);
+  const settingsOptions = readClaudeSettingsPluginOptions(env);
+  const providerOrder = normalizeProviderOrder(pluginOption(env, settingsOptions, 'provider_order'));
   const parsedProviderOrder = providerOrder.length > 0 ? providerOrder : undefined;
-  const allowRemoteFallback = boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_REMOTE_FALLBACK, false);
+  const allowRemoteFallback = boolEnv(pluginOption(env, settingsOptions, 'allow_remote_fallback'), false);
 
   return PluginConfigSchema.parse({
-    pluginRoot: env.CLAUDE_PLUGIN_ROOT ?? process.cwd(),
-    pluginDataDir: env.CLAUDE_VISION_PLUGIN_DATA ?? env.CLAUDE_PLUGIN_DATA ?? '.vision-data',
+    pluginRoot: configuredValue(env.CLAUDE_PLUGIN_ROOT) ?? process.cwd(),
+    pluginDataDir: configuredValue(env.CLAUDE_VISION_PLUGIN_DATA) ?? configuredValue(env.CLAUDE_PLUGIN_DATA) ?? '.vision-data',
     providerOrder: parsedProviderOrder,
     allowRemoteFallback,
-    allowHttpUrls: boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_HTTP_URLS, false),
-    allowPrivateNetworkUrls: boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_PRIVATE_NETWORK_URLS, false),
-    allowedDirectories: splitCsv(env.CLAUDE_PLUGIN_OPTION_ALLOWED_DIRECTORIES),
-    deniedDirectories: splitCsv(env.CLAUDE_PLUGIN_OPTION_DENIED_DIRECTORIES),
-    maxImageBytes: numEnv(env.CLAUDE_PLUGIN_OPTION_MAX_IMAGE_BYTES, 10485760),
-    hookTimeoutMs: numEnv(env.CLAUDE_PLUGIN_OPTION_HOOK_TIMEOUT_MS, 30000),
-    providerTimeoutMs: numEnv(env.CLAUDE_PLUGIN_OPTION_PROVIDER_TIMEOUT_MS, 20000),
-    mcpTimeoutMs: numEnv(env.CLAUDE_PLUGIN_OPTION_MCP_TIMEOUT_MS, 60000),
-    maxOutputChars: numEnv(env.CLAUDE_PLUGIN_OPTION_MAX_OUTPUT_CHARS, 8000),
+    allowHttpUrls: boolEnv(pluginOption(env, settingsOptions, 'allow_http_urls'), false),
+    allowPrivateNetworkUrls: boolEnv(pluginOption(env, settingsOptions, 'allow_private_network_urls'), false),
+    allowedDirectories: splitCsv(pluginOption(env, settingsOptions, 'allowed_directories')),
+    deniedDirectories: splitCsv(pluginOption(env, settingsOptions, 'denied_directories')),
+    maxImageBytes: numEnv(pluginOption(env, settingsOptions, 'max_image_bytes'), 10485760),
+    hookTimeoutMs: numEnv(pluginOption(env, settingsOptions, 'hook_timeout_ms'), 30000),
+    providerTimeoutMs: numEnv(pluginOption(env, settingsOptions, 'provider_timeout_ms'), 20000),
+    mcpTimeoutMs: numEnv(pluginOption(env, settingsOptions, 'mcp_timeout_ms'), 60000),
+    maxOutputChars: numEnv(pluginOption(env, settingsOptions, 'max_output_chars'), 8000),
     providers: {
       ollama: {
         id: 'ollama',
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_OLLAMA_BASE_URL ?? 'http://127.0.0.1:11434/v1',
-        model: env.CLAUDE_PLUGIN_OPTION_OLLAMA_MODEL ?? 'llava',
-        apiKey: env.CLAUDE_PLUGIN_OPTION_OLLAMA_API_KEY || undefined,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, 'ollama_base_url')) ?? 'http://127.0.0.1:11434/v1',
+        model: configuredValue(pluginOption(env, settingsOptions, 'ollama_model')) ?? 'llava',
+        apiKey: configuredValue(pluginOption(env, settingsOptions, 'ollama_api_key')),
         enabled: true,
         remote: false,
       },
       omlx: {
         id: 'omlx',
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_OMLX_BASE_URL ?? 'http://127.0.0.1:8000/v1',
-        model: env.CLAUDE_PLUGIN_OPTION_OMLX_MODEL ?? 'mlx-vlm',
-        apiKey: env.CLAUDE_PLUGIN_OPTION_OMLX_API_KEY || undefined,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, 'omlx_base_url')) ?? 'http://127.0.0.1:8000/v1',
+        model: configuredValue(pluginOption(env, settingsOptions, 'omlx_model')) ?? 'mlx-vlm',
+        apiKey: configuredValue(pluginOption(env, settingsOptions, 'omlx_api_key')),
         enabled: true,
         remote: false,
       },
       llama_cpp: {
         id: 'llama_cpp',
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_BASE_URL ?? 'http://127.0.0.1:8080/v1',
-        model: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_MODEL ?? 'llava',
-        apiKey: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_API_KEY || undefined,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, 'llama_cpp_base_url')) ?? 'http://127.0.0.1:8080/v1',
+        model: configuredValue(pluginOption(env, settingsOptions, 'llama_cpp_model')) ?? 'llava',
+        apiKey: configuredValue(pluginOption(env, settingsOptions, 'llama_cpp_api_key')),
         enabled: true,
         remote: false,
       },
       remote_openai: {
         id: 'remote_openai',
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_REMOTE_OPENAI_BASE_URL ?? '',
-        model: env.CLAUDE_PLUGIN_OPTION_REMOTE_OPENAI_MODEL ?? '',
-        apiKey: env.CLAUDE_PLUGIN_OPTION_REMOTE_OPENAI_API_KEY || undefined,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, 'remote_openai_base_url')) ?? '',
+        model: configuredValue(pluginOption(env, settingsOptions, 'remote_openai_model')) ?? '',
+        apiKey: configuredValue(pluginOption(env, settingsOptions, 'remote_openai_api_key')),
         enabled: allowRemoteFallback,
         remote: true,
       },
     },
   });
+}
+
+function pluginOption(
+  env: NodeJS.ProcessEnv,
+  settingsOptions: Record<string, unknown>,
+  optionName: string,
+): unknown {
+  const envName = `CLAUDE_PLUGIN_OPTION_${optionName.toUpperCase()}`;
+  return configuredValue(env[envName]) ?? settingsOptions[optionName];
+}
+
+function readClaudeSettingsPluginOptions(env: NodeJS.ProcessEnv): Record<string, unknown> {
+  try {
+    const home = configuredValue(env.HOME) ?? homedir();
+    const settings = JSON.parse(readFileSync(join(home, '.claude', 'settings.json'), 'utf8')) as {
+      pluginConfigs?: Record<string, { options?: Record<string, unknown> }>;
+    };
+    const configs = settings.pluginConfigs ?? {};
+    return configs[pluginConfigKey]?.options ?? findVisionBridgeOptions(configs) ?? {};
+  } catch {
+    return {};
+  }
+}
+
+function findVisionBridgeOptions(
+  configs: Record<string, { options?: Record<string, unknown> }>,
+): Record<string, unknown> | undefined {
+  for (const [key, value] of Object.entries(configs)) {
+    if (key.startsWith('claude-vision-bridge@') && value.options) return value.options;
+  }
+  return undefined;
 }

@@ -5,7 +5,7 @@ var __export = (target, all) => {
 };
 
 // src/hook/handler.ts
-import { readFileSync as readFileSync4 } from "node:fs";
+import { readFileSync as readFileSync5 } from "node:fs";
 
 // node_modules/zod/v4/classic/external.js
 var external_exports = {};
@@ -15711,73 +15711,106 @@ function sourceFailureDetails(source) {
 }
 
 // src/config/load-config.ts
+import { readFileSync as readFileSync4 } from "node:fs";
+import { homedir as homedir3 } from "node:os";
+import { join as join3 } from "node:path";
+var pluginConfigKey = "claude-vision-bridge@brein-claude-tools";
 function splitCsv(value) {
-  return (value ?? "").split(",").map((item) => item.trim()).filter((item) => item.length > 0);
+  return (configuredValue(value) ?? "").split(",").map((item) => item.trim()).filter((item) => item.length > 0);
 }
 function normalizeProviderOrder(value) {
   return splitCsv(value).map((item) => item.toLowerCase().replace(/-/g, "_"));
 }
 function boolEnv(value, fallback) {
-  if (value === void 0 || value === "") return fallback;
-  return value === "1" || value.toLowerCase() === "true";
+  const configured = configuredValue(value);
+  if (configured === void 0) return fallback;
+  return configured === "1" || configured.toLowerCase() === "true";
 }
 function numEnv(value, fallback) {
-  const parsed = Number(value);
+  const parsed = Number(configuredValue(value));
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
+function configuredValue(value) {
+  if (value === void 0 || value === "") return void 0;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (typeof value !== "string") return void 0;
+  if (/^\$\{[A-Z0-9_]+\}$/.test(value)) return void 0;
+  return value;
+}
 function loadConfig(env = process.env) {
-  const providerOrder = normalizeProviderOrder(env.CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER);
+  const settingsOptions = readClaudeSettingsPluginOptions(env);
+  const providerOrder = normalizeProviderOrder(pluginOption(env, settingsOptions, "provider_order"));
   const parsedProviderOrder = providerOrder.length > 0 ? providerOrder : void 0;
-  const allowRemoteFallback = boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_REMOTE_FALLBACK, false);
+  const allowRemoteFallback = boolEnv(pluginOption(env, settingsOptions, "allow_remote_fallback"), false);
   return PluginConfigSchema.parse({
-    pluginRoot: env.CLAUDE_PLUGIN_ROOT ?? process.cwd(),
-    pluginDataDir: env.CLAUDE_VISION_PLUGIN_DATA ?? env.CLAUDE_PLUGIN_DATA ?? ".vision-data",
+    pluginRoot: configuredValue(env.CLAUDE_PLUGIN_ROOT) ?? process.cwd(),
+    pluginDataDir: configuredValue(env.CLAUDE_VISION_PLUGIN_DATA) ?? configuredValue(env.CLAUDE_PLUGIN_DATA) ?? ".vision-data",
     providerOrder: parsedProviderOrder,
     allowRemoteFallback,
-    allowHttpUrls: boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_HTTP_URLS, false),
-    allowPrivateNetworkUrls: boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_PRIVATE_NETWORK_URLS, false),
-    allowedDirectories: splitCsv(env.CLAUDE_PLUGIN_OPTION_ALLOWED_DIRECTORIES),
-    deniedDirectories: splitCsv(env.CLAUDE_PLUGIN_OPTION_DENIED_DIRECTORIES),
-    maxImageBytes: numEnv(env.CLAUDE_PLUGIN_OPTION_MAX_IMAGE_BYTES, 10485760),
-    hookTimeoutMs: numEnv(env.CLAUDE_PLUGIN_OPTION_HOOK_TIMEOUT_MS, 3e4),
-    providerTimeoutMs: numEnv(env.CLAUDE_PLUGIN_OPTION_PROVIDER_TIMEOUT_MS, 2e4),
-    mcpTimeoutMs: numEnv(env.CLAUDE_PLUGIN_OPTION_MCP_TIMEOUT_MS, 6e4),
-    maxOutputChars: numEnv(env.CLAUDE_PLUGIN_OPTION_MAX_OUTPUT_CHARS, 8e3),
+    allowHttpUrls: boolEnv(pluginOption(env, settingsOptions, "allow_http_urls"), false),
+    allowPrivateNetworkUrls: boolEnv(pluginOption(env, settingsOptions, "allow_private_network_urls"), false),
+    allowedDirectories: splitCsv(pluginOption(env, settingsOptions, "allowed_directories")),
+    deniedDirectories: splitCsv(pluginOption(env, settingsOptions, "denied_directories")),
+    maxImageBytes: numEnv(pluginOption(env, settingsOptions, "max_image_bytes"), 10485760),
+    hookTimeoutMs: numEnv(pluginOption(env, settingsOptions, "hook_timeout_ms"), 3e4),
+    providerTimeoutMs: numEnv(pluginOption(env, settingsOptions, "provider_timeout_ms"), 2e4),
+    mcpTimeoutMs: numEnv(pluginOption(env, settingsOptions, "mcp_timeout_ms"), 6e4),
+    maxOutputChars: numEnv(pluginOption(env, settingsOptions, "max_output_chars"), 8e3),
     providers: {
       ollama: {
         id: "ollama",
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_OLLAMA_BASE_URL ?? "http://127.0.0.1:11434/v1",
-        model: env.CLAUDE_PLUGIN_OPTION_OLLAMA_MODEL ?? "llava",
-        apiKey: env.CLAUDE_PLUGIN_OPTION_OLLAMA_API_KEY || void 0,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "ollama_base_url")) ?? "http://127.0.0.1:11434/v1",
+        model: configuredValue(pluginOption(env, settingsOptions, "ollama_model")) ?? "llava",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "ollama_api_key")),
         enabled: true,
         remote: false
       },
       omlx: {
         id: "omlx",
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_OMLX_BASE_URL ?? "http://127.0.0.1:8000/v1",
-        model: env.CLAUDE_PLUGIN_OPTION_OMLX_MODEL ?? "mlx-vlm",
-        apiKey: env.CLAUDE_PLUGIN_OPTION_OMLX_API_KEY || void 0,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "omlx_base_url")) ?? "http://127.0.0.1:8000/v1",
+        model: configuredValue(pluginOption(env, settingsOptions, "omlx_model")) ?? "mlx-vlm",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "omlx_api_key")),
         enabled: true,
         remote: false
       },
       llama_cpp: {
         id: "llama_cpp",
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_BASE_URL ?? "http://127.0.0.1:8080/v1",
-        model: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_MODEL ?? "llava",
-        apiKey: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_API_KEY || void 0,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_base_url")) ?? "http://127.0.0.1:8080/v1",
+        model: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_model")) ?? "llava",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_api_key")),
         enabled: true,
         remote: false
       },
       remote_openai: {
         id: "remote_openai",
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_REMOTE_OPENAI_BASE_URL ?? "",
-        model: env.CLAUDE_PLUGIN_OPTION_REMOTE_OPENAI_MODEL ?? "",
-        apiKey: env.CLAUDE_PLUGIN_OPTION_REMOTE_OPENAI_API_KEY || void 0,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "remote_openai_base_url")) ?? "",
+        model: configuredValue(pluginOption(env, settingsOptions, "remote_openai_model")) ?? "",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "remote_openai_api_key")),
         enabled: allowRemoteFallback,
         remote: true
       }
     }
   });
+}
+function pluginOption(env, settingsOptions, optionName) {
+  const envName = `CLAUDE_PLUGIN_OPTION_${optionName.toUpperCase()}`;
+  return configuredValue(env[envName]) ?? settingsOptions[optionName];
+}
+function readClaudeSettingsPluginOptions(env) {
+  try {
+    const home = configuredValue(env.HOME) ?? homedir3();
+    const settings = JSON.parse(readFileSync4(join3(home, ".claude", "settings.json"), "utf8"));
+    const configs = settings.pluginConfigs ?? {};
+    return configs[pluginConfigKey]?.options ?? findVisionBridgeOptions(configs) ?? {};
+  } catch {
+    return {};
+  }
+}
+function findVisionBridgeOptions(configs) {
+  for (const [key, value] of Object.entries(configs)) {
+    if (key.startsWith("claude-vision-bridge@") && value.options) return value.options;
+  }
+  return void 0;
 }
 
 // src/sources/extract-from-prompt.ts
@@ -15840,6 +15873,7 @@ function escapeRegExp(value) {
 
 // src/hook/handler.ts
 function parseHookInputToRequests(input) {
+  if (hasExplicitMcpVisionIntent(input.prompt)) return [];
   const sources = extractSourcesFromPrompt(input.prompt);
   const mode = inferHookMode(input.prompt);
   return sources.map(
@@ -15851,6 +15885,10 @@ function parseHookInputToRequests(input) {
       maxOutputChars: Number(process.env.CLAUDE_PLUGIN_OPTION_MAX_OUTPUT_CHARS ?? 8e3)
     })
   );
+}
+function hasExplicitMcpVisionIntent(prompt) {
+  if (/analyze_image|doctor_providers|clear_vision_cache|vision[-\s]?bridge/i.test(prompt)) return true;
+  return /\bmcp\b/i.test(prompt) && /(vision|image|screenshot|图片|截图|识图|视觉|看图)/i.test(prompt);
 }
 function inferHookMode(prompt) {
   if (/\bocr\b/i.test(prompt)) return "ocr";
@@ -15890,7 +15928,7 @@ async function runHook(rawInput) {
   }
 }
 async function main() {
-  const raw = readFileSync4(0, "utf8");
+  const raw = readFileSync5(0, "utf8");
   const output = await runHook(raw);
   if (output) process.stdout.write(output);
 }

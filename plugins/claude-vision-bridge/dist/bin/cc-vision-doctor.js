@@ -6889,6 +6889,11 @@ var require_dist = __commonJS({
   }
 });
 
+// src/config/load-config.ts
+import { readFileSync } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
+
 // node_modules/zod/v4/classic/external.js
 var external_exports = {};
 __export(external_exports, {
@@ -21574,73 +21579,103 @@ var PluginConfigSchema = external_exports.object({
 });
 
 // src/config/load-config.ts
+var pluginConfigKey = "claude-vision-bridge@brein-claude-tools";
 function splitCsv(value) {
-  return (value ?? "").split(",").map((item) => item.trim()).filter((item) => item.length > 0);
+  return (configuredValue(value) ?? "").split(",").map((item) => item.trim()).filter((item) => item.length > 0);
 }
 function normalizeProviderOrder(value) {
   return splitCsv(value).map((item) => item.toLowerCase().replace(/-/g, "_"));
 }
 function boolEnv(value, fallback) {
-  if (value === void 0 || value === "") return fallback;
-  return value === "1" || value.toLowerCase() === "true";
+  const configured = configuredValue(value);
+  if (configured === void 0) return fallback;
+  return configured === "1" || configured.toLowerCase() === "true";
 }
 function numEnv(value, fallback) {
-  const parsed = Number(value);
+  const parsed = Number(configuredValue(value));
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
+function configuredValue(value) {
+  if (value === void 0 || value === "") return void 0;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (typeof value !== "string") return void 0;
+  if (/^\$\{[A-Z0-9_]+\}$/.test(value)) return void 0;
+  return value;
+}
 function loadConfig(env = process.env) {
-  const providerOrder = normalizeProviderOrder(env.CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER);
+  const settingsOptions = readClaudeSettingsPluginOptions(env);
+  const providerOrder = normalizeProviderOrder(pluginOption(env, settingsOptions, "provider_order"));
   const parsedProviderOrder = providerOrder.length > 0 ? providerOrder : void 0;
-  const allowRemoteFallback = boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_REMOTE_FALLBACK, false);
+  const allowRemoteFallback = boolEnv(pluginOption(env, settingsOptions, "allow_remote_fallback"), false);
   return PluginConfigSchema.parse({
-    pluginRoot: env.CLAUDE_PLUGIN_ROOT ?? process.cwd(),
-    pluginDataDir: env.CLAUDE_VISION_PLUGIN_DATA ?? env.CLAUDE_PLUGIN_DATA ?? ".vision-data",
+    pluginRoot: configuredValue(env.CLAUDE_PLUGIN_ROOT) ?? process.cwd(),
+    pluginDataDir: configuredValue(env.CLAUDE_VISION_PLUGIN_DATA) ?? configuredValue(env.CLAUDE_PLUGIN_DATA) ?? ".vision-data",
     providerOrder: parsedProviderOrder,
     allowRemoteFallback,
-    allowHttpUrls: boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_HTTP_URLS, false),
-    allowPrivateNetworkUrls: boolEnv(env.CLAUDE_PLUGIN_OPTION_ALLOW_PRIVATE_NETWORK_URLS, false),
-    allowedDirectories: splitCsv(env.CLAUDE_PLUGIN_OPTION_ALLOWED_DIRECTORIES),
-    deniedDirectories: splitCsv(env.CLAUDE_PLUGIN_OPTION_DENIED_DIRECTORIES),
-    maxImageBytes: numEnv(env.CLAUDE_PLUGIN_OPTION_MAX_IMAGE_BYTES, 10485760),
-    hookTimeoutMs: numEnv(env.CLAUDE_PLUGIN_OPTION_HOOK_TIMEOUT_MS, 3e4),
-    providerTimeoutMs: numEnv(env.CLAUDE_PLUGIN_OPTION_PROVIDER_TIMEOUT_MS, 2e4),
-    mcpTimeoutMs: numEnv(env.CLAUDE_PLUGIN_OPTION_MCP_TIMEOUT_MS, 6e4),
-    maxOutputChars: numEnv(env.CLAUDE_PLUGIN_OPTION_MAX_OUTPUT_CHARS, 8e3),
+    allowHttpUrls: boolEnv(pluginOption(env, settingsOptions, "allow_http_urls"), false),
+    allowPrivateNetworkUrls: boolEnv(pluginOption(env, settingsOptions, "allow_private_network_urls"), false),
+    allowedDirectories: splitCsv(pluginOption(env, settingsOptions, "allowed_directories")),
+    deniedDirectories: splitCsv(pluginOption(env, settingsOptions, "denied_directories")),
+    maxImageBytes: numEnv(pluginOption(env, settingsOptions, "max_image_bytes"), 10485760),
+    hookTimeoutMs: numEnv(pluginOption(env, settingsOptions, "hook_timeout_ms"), 3e4),
+    providerTimeoutMs: numEnv(pluginOption(env, settingsOptions, "provider_timeout_ms"), 2e4),
+    mcpTimeoutMs: numEnv(pluginOption(env, settingsOptions, "mcp_timeout_ms"), 6e4),
+    maxOutputChars: numEnv(pluginOption(env, settingsOptions, "max_output_chars"), 8e3),
     providers: {
       ollama: {
         id: "ollama",
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_OLLAMA_BASE_URL ?? "http://127.0.0.1:11434/v1",
-        model: env.CLAUDE_PLUGIN_OPTION_OLLAMA_MODEL ?? "llava",
-        apiKey: env.CLAUDE_PLUGIN_OPTION_OLLAMA_API_KEY || void 0,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "ollama_base_url")) ?? "http://127.0.0.1:11434/v1",
+        model: configuredValue(pluginOption(env, settingsOptions, "ollama_model")) ?? "llava",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "ollama_api_key")),
         enabled: true,
         remote: false
       },
       omlx: {
         id: "omlx",
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_OMLX_BASE_URL ?? "http://127.0.0.1:8000/v1",
-        model: env.CLAUDE_PLUGIN_OPTION_OMLX_MODEL ?? "mlx-vlm",
-        apiKey: env.CLAUDE_PLUGIN_OPTION_OMLX_API_KEY || void 0,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "omlx_base_url")) ?? "http://127.0.0.1:8000/v1",
+        model: configuredValue(pluginOption(env, settingsOptions, "omlx_model")) ?? "mlx-vlm",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "omlx_api_key")),
         enabled: true,
         remote: false
       },
       llama_cpp: {
         id: "llama_cpp",
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_BASE_URL ?? "http://127.0.0.1:8080/v1",
-        model: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_MODEL ?? "llava",
-        apiKey: env.CLAUDE_PLUGIN_OPTION_LLAMA_CPP_API_KEY || void 0,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_base_url")) ?? "http://127.0.0.1:8080/v1",
+        model: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_model")) ?? "llava",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_api_key")),
         enabled: true,
         remote: false
       },
       remote_openai: {
         id: "remote_openai",
-        baseUrl: env.CLAUDE_PLUGIN_OPTION_REMOTE_OPENAI_BASE_URL ?? "",
-        model: env.CLAUDE_PLUGIN_OPTION_REMOTE_OPENAI_MODEL ?? "",
-        apiKey: env.CLAUDE_PLUGIN_OPTION_REMOTE_OPENAI_API_KEY || void 0,
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "remote_openai_base_url")) ?? "",
+        model: configuredValue(pluginOption(env, settingsOptions, "remote_openai_model")) ?? "",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "remote_openai_api_key")),
         enabled: allowRemoteFallback,
         remote: true
       }
     }
   });
+}
+function pluginOption(env, settingsOptions, optionName) {
+  const envName = `CLAUDE_PLUGIN_OPTION_${optionName.toUpperCase()}`;
+  return configuredValue(env[envName]) ?? settingsOptions[optionName];
+}
+function readClaudeSettingsPluginOptions(env) {
+  try {
+    const home = configuredValue(env.HOME) ?? homedir();
+    const settings = JSON.parse(readFileSync(join(home, ".claude", "settings.json"), "utf8"));
+    const configs = settings.pluginConfigs ?? {};
+    return configs[pluginConfigKey]?.options ?? findVisionBridgeOptions(configs) ?? {};
+  } catch {
+    return {};
+  }
+}
+function findVisionBridgeOptions(configs) {
+  for (const [key, value] of Object.entries(configs)) {
+    if (key.startsWith("claude-vision-bridge@") && value.options) return value.options;
+  }
+  return void 0;
 }
 
 // node_modules/@modelcontextprotocol/sdk/dist/esm/server/zod-compat.js
@@ -25001,13 +25036,13 @@ import {
   existsSync,
   mkdirSync,
   readdirSync,
-  readFileSync,
+  readFileSync as readFileSync2,
   renameSync,
   rmSync,
   statSync,
   writeFileSync
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join as join2 } from "node:path";
 var CacheManager = class {
   constructor(options) {
     this.options = options;
@@ -25015,38 +25050,38 @@ var CacheManager = class {
   options;
   ensureDirs() {
     for (const dir of ["success", "failure", "locks"]) {
-      mkdirSync(join(this.options.dataDir, "cache", dir), { recursive: true });
+      mkdirSync(join2(this.options.dataDir, "cache", dir), { recursive: true });
     }
   }
   readSuccess(key) {
-    return readArtifact(join(this.options.dataDir, "cache", "success", `${key}.json`), VisionArtifactSchema);
+    return readArtifact(join2(this.options.dataDir, "cache", "success", `${key}.json`), VisionArtifactSchema);
   }
   writeSuccess(key, artifact) {
-    writeJsonAtomic(join(this.options.dataDir, "cache", "success", `${key}.json`), artifact);
-    writeTextAtomic(join(this.options.dataDir, "cache", "success", `${key}.md`), artifact.markdown);
+    writeJsonAtomic(join2(this.options.dataDir, "cache", "success", `${key}.json`), artifact);
+    writeTextAtomic(join2(this.options.dataDir, "cache", "success", `${key}.md`), artifact.markdown);
   }
   readFailure(key, ttlMs) {
-    const file2 = join(this.options.dataDir, "cache", "failure", `${key}.json`);
+    const file2 = join2(this.options.dataDir, "cache", "failure", `${key}.json`);
     if (ttlMs <= 0 || !existsSync(file2)) return void 0;
     const ageMs = Date.now() - statSync(file2).mtimeMs;
     if (ageMs > ttlMs) return void 0;
     return readArtifact(file2, FailureArtifactSchema);
   }
   writeFailure(key, artifact) {
-    writeJsonAtomic(join(this.options.dataDir, "cache", "failure", `${key}.json`), artifact);
-    writeTextAtomic(join(this.options.dataDir, "cache", "failure", `${key}.md`), artifact.markdown);
+    writeJsonAtomic(join2(this.options.dataDir, "cache", "failure", `${key}.json`), artifact);
+    writeTextAtomic(join2(this.options.dataDir, "cache", "failure", `${key}.md`), artifact.markdown);
   }
   clear(kind) {
     this.ensureDirs();
     const kinds = kind === "all" ? ["success", "failure"] : [kind];
     for (const item of kinds) {
-      rmDirContents(join(this.options.dataDir, "cache", item));
+      rmDirContents(join2(this.options.dataDir, "cache", item));
     }
   }
 };
 function readArtifact(file2, schema) {
   try {
-    const parsed = JSON.parse(readFileSync(file2, "utf8"));
+    const parsed = JSON.parse(readFileSync2(file2, "utf8"));
     const result = schema.safeParse(parsed);
     return result.success ? result.data : void 0;
   } catch {
@@ -25066,7 +25101,7 @@ function writeTextAtomic(file2, text) {
 function rmDirContents(dir) {
   mkdirSync(dir, { recursive: true });
   for (const name of readdirSyncSafe(dir)) {
-    rmSyncSafe(join(dir, name));
+    rmSyncSafe(join2(dir, name));
   }
 }
 function readdirSyncSafe(dir) {
@@ -25085,7 +25120,7 @@ function rmSyncSafe(path) {
 }
 
 // src/core/vision-service.ts
-import { homedir as homedir2 } from "node:os";
+import { homedir as homedir3 } from "node:os";
 
 // src/cache/hash.ts
 import { createHash } from "node:crypto";
@@ -25449,7 +25484,7 @@ function isTimeoutError(error51) {
 
 // src/security/path-policy.ts
 import { realpathSync } from "node:fs";
-import { homedir } from "node:os";
+import { homedir as homedir2 } from "node:os";
 import { basename, parse as parse3, resolve, sep } from "node:path";
 var sensitiveDirectoryNames = /* @__PURE__ */ new Set([".git", ".ssh", "node_modules", "dist", "build"]);
 var sensitiveFilePatterns = [/^\.env/i, /\.pem$/i, /\.key$/i];
@@ -25481,7 +25516,7 @@ var windowsSystemRoots = [
 function assertPathAllowed(path, options) {
   const real = realpathSync(resolve(options.cwd, path));
   const cwd = realpathSync(options.cwd);
-  const home = realpathSync(options.homeDir ?? homedir());
+  const home = realpathSync(options.homeDir ?? homedir2());
   const allowedRoots = [
     cwd,
     home,
@@ -25606,9 +25641,9 @@ function decodeBase64Image(input) {
 }
 
 // src/sources/clipboard-source.ts
-import { existsSync as existsSync2, mkdirSync as mkdirSync2, readFileSync as readFileSync2, rmSync as rmSync2, writeFileSync as writeFileSync2 } from "node:fs";
+import { existsSync as existsSync2, mkdirSync as mkdirSync2, readFileSync as readFileSync3, rmSync as rmSync2, writeFileSync as writeFileSync2 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join as join2 } from "node:path";
+import { join as join3 } from "node:path";
 import { spawnSync } from "node:child_process";
 async function resolveClipboardImage(options) {
   const reader = options.reader ?? new SystemClipboardReader();
@@ -25621,9 +25656,9 @@ async function resolveClipboardImage(options) {
   }
   const detected = detectImageMime(bytes);
   const sha256 = sha256Hex(bytes);
-  const captureDir = join2(options.pluginDataDir, "captures");
+  const captureDir = join3(options.pluginDataDir, "captures");
   mkdirSync2(captureDir, { recursive: true });
-  const resolvedPath = join2(captureDir, `${sha256}${detected.ext}`);
+  const resolvedPath = join3(captureDir, `${sha256}${detected.ext}`);
   writeFileSync2(resolvedPath, bytes, { flag: "w" });
   return {
     type: "clipboard",
@@ -25640,7 +25675,7 @@ var SystemClipboardReader = class {
     if (process.platform !== "darwin") {
       throw new Error(`Clipboard image reading is not available on ${process.platform}`);
     }
-    const out = join2(tmpdir(), `claude-vision-clipboard-${process.pid}-${Date.now()}.png`);
+    const out = join3(tmpdir(), `claude-vision-clipboard-${process.pid}-${Date.now()}.png`);
     const script = [
       "set outFile to missing value",
       "try",
@@ -25661,7 +25696,7 @@ var SystemClipboardReader = class {
       if (result.status !== 0 || !existsSync2(out)) {
         return null;
       }
-      const bytes = readFileSync2(out);
+      const bytes = readFileSync3(out);
       return bytes.length === 0 ? null : bytes;
     } finally {
       rmSync2(out, { force: true });
@@ -25673,7 +25708,7 @@ function appleScriptString(value) {
 }
 
 // src/sources/path-source.ts
-import { readFileSync as readFileSync3, realpathSync as realpathSync2, statSync as statSync2 } from "node:fs";
+import { readFileSync as readFileSync4, realpathSync as realpathSync2, statSync as statSync2 } from "node:fs";
 import { extname as extname2 } from "node:path";
 function resolvePathImage(path, options) {
   const resolvedPath = realpathSync2(path);
@@ -25688,7 +25723,7 @@ function resolvePathImage(path, options) {
   if (!expectedMime) {
     throw new Error(`Unsupported image extension: ${extname2(resolvedPath)}`);
   }
-  const bytes = readFileSync3(resolvedPath);
+  const bytes = readFileSync4(resolvedPath);
   const detected = detectImageMime(bytes);
   if (detected.mime !== expectedMime) {
     throw new Error(`MIME mismatch: extension=${expectedMime} bytes=${detected.mime}`);
@@ -25958,7 +25993,7 @@ var VisionService = class {
       case "path": {
         const realPath = assertPathAllowed(request.source.path, {
           cwd: context.cwd,
-          homeDir: homedir2(),
+          homeDir: homedir3(),
           allowedDirectories: this.config.allowedDirectories,
           deniedDirectories: this.config.deniedDirectories
         });

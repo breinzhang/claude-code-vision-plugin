@@ -43,4 +43,24 @@ describe('plugin and marketplace manifests', () => {
     expect(plugin).not.toHaveProperty('hooks');
     expect(plugin).not.toHaveProperty('mcpServers');
   });
+
+  it('passes every plugin option through to the MCP server environment', () => {
+    const plugin = readJson('.claude-plugin/plugin.json') as {
+      userConfig: Record<string, unknown>;
+    };
+    const mcp = readJson('.mcp.json') as {
+      mcpServers: {
+        'vision-bridge': {
+          env: Record<string, string>;
+        };
+      };
+    };
+
+    const env = mcp.mcpServers['vision-bridge'].env;
+    expect(env.CLAUDE_VISION_PLUGIN_DATA).toBe('${CLAUDE_PLUGIN_DATA}');
+    for (const optionName of Object.keys(plugin.userConfig)) {
+      const envName = `CLAUDE_PLUGIN_OPTION_${optionName.toUpperCase()}`;
+      expect(env[envName]).toBe(`\${${envName}}`);
+    }
+  });
 });

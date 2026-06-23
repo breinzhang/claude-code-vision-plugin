@@ -16,6 +16,8 @@ export interface UserPromptSubmitInput {
 }
 
 export function parseHookInputToRequests(input: UserPromptSubmitInput): AnalyzeImageRequest[] {
+  if (hasExplicitMcpVisionIntent(input.prompt)) return [];
+
   const sources = extractSourcesFromPrompt(input.prompt);
   const mode = inferHookMode(input.prompt);
   return sources.map((source) =>
@@ -27,6 +29,11 @@ export function parseHookInputToRequests(input: UserPromptSubmitInput): AnalyzeI
       maxOutputChars: Number(process.env.CLAUDE_PLUGIN_OPTION_MAX_OUTPUT_CHARS ?? 8000),
     }),
   );
+}
+
+function hasExplicitMcpVisionIntent(prompt: string): boolean {
+  if (/analyze_image|doctor_providers|clear_vision_cache|vision[-\s]?bridge/i.test(prompt)) return true;
+  return /\bmcp\b/i.test(prompt) && /(vision|image|screenshot|图片|截图|识图|视觉|看图)/i.test(prompt);
 }
 
 function inferHookMode(prompt: string): VisionMode {

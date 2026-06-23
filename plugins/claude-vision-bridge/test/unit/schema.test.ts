@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import {
   AnalyzeImageRequestSchema,
   FailureArtifactSchema,
@@ -6,6 +8,7 @@ import {
   VisionArtifactSchema,
 } from '../../src/core/schema.js';
 import { loadConfig } from '../../src/config/load-config.js';
+import { withTempDir } from '../helpers/temp.js';
 
 describe('shared schemas', () => {
   it('accepts path, url, clipboard, and base64 sources', () => {
@@ -98,6 +101,56 @@ describe('shared schemas', () => {
     expect(config.providers.omlx.model).toBe('gemma-4-12B-it-4bit');
     expect(config.providers.omlx.apiKey).toBe('omlx-secret');
   });
+
+  it('ignores unresolved MCP environment placeholders', () =>
+    withTempDir((home) => {
+      const config = loadConfig({
+        HOME: home,
+        CLAUDE_PLUGIN_DATA: '/plugin-data',
+        CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER: '${CLAUDE_PLUGIN_OPTION_PROVIDER_ORDER}',
+        CLAUDE_PLUGIN_OPTION_ALLOW_REMOTE_FALLBACK: '${CLAUDE_PLUGIN_OPTION_ALLOW_REMOTE_FALLBACK}',
+        CLAUDE_PLUGIN_OPTION_OMLX_MODEL: '${CLAUDE_PLUGIN_OPTION_OMLX_MODEL}',
+        CLAUDE_PLUGIN_OPTION_OMLX_API_KEY: '${CLAUDE_PLUGIN_OPTION_OMLX_API_KEY}',
+        CLAUDE_PLUGIN_OPTION_MAX_OUTPUT_CHARS: '${CLAUDE_PLUGIN_OPTION_MAX_OUTPUT_CHARS}',
+      });
+
+      expect(config.providerOrder).toEqual(['ollama', 'omlx', 'llama_cpp', 'remote_openai']);
+      expect(config.allowRemoteFallback).toBe(false);
+      expect(config.providers.omlx.model).toBe('mlx-vlm');
+      expect(config.providers.omlx.apiKey).toBeUndefined();
+      expect(config.maxOutputChars).toBe(8000);
+    }));
+
+  it('loads plugin options from Claude settings when MCP environment omits them', () =>
+    withTempDir((home) => {
+      const claudeDir = join(home, '.claude');
+      mkdirSync(claudeDir);
+      writeFileSync(
+        join(claudeDir, 'settings.json'),
+        JSON.stringify({
+          pluginConfigs: {
+            'claude-vision-bridge@brein-claude-tools': {
+              options: {
+                provider_order: 'oMLX',
+                omlx_base_url: 'http://127.0.0.1:8000/v1',
+                omlx_model: 'gemma-4-12B-it-4bit',
+                omlx_api_key: 'omlx-secret',
+              },
+            },
+          },
+        }),
+      );
+
+      const config = loadConfig({
+        HOME: home,
+        CLAUDE_PLUGIN_DATA: '/plugin-data',
+      });
+
+      expect(config.providerOrder).toEqual(['omlx']);
+      expect(config.providers.omlx.baseUrl).toBe('http://127.0.0.1:8000/v1');
+      expect(config.providers.omlx.model).toBe('gemma-4-12B-it-4bit');
+      expect(config.providers.omlx.apiKey).toBe('omlx-secret');
+    }));
 
   it('accepts success and failure artifact envelopes', () => {
     expect(

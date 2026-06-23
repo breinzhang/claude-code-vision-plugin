@@ -59,6 +59,17 @@ describe('Hook handler', () => {
     expect(requests.map((item) => item.maxOutputChars)).toEqual([8000, 8000, 8000]);
   });
 
+  it('skips automatic hook analysis when the prompt explicitly asks for MCP vision bridge', () => {
+    const requests = parseHookInputToRequests({
+      session_id: 's',
+      cwd: process.cwd(),
+      hook_event_name: 'UserPromptSubmit',
+      prompt: '请使用 vision-bridge 的 analyze_image 工具看 ./screen.png',
+    });
+
+    expect(requests).toEqual([]);
+  });
+
   it('uses hook timeout and max output environment overrides', () => {
     process.env.CLAUDE_PLUGIN_OPTION_HOOK_TIMEOUT_MS = '12000';
     process.env.CLAUDE_PLUGIN_OPTION_MAX_OUTPUT_CHARS = '3000';
