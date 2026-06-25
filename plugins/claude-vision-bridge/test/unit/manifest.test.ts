@@ -28,15 +28,19 @@ describe('plugin and marketplace manifests', () => {
     const plugin = readJson('.claude-plugin/plugin.json') as {
       name: string;
       displayName: string;
+      version: string;
       license: string;
       defaultEnabled: boolean;
       userConfig: Record<string, { sensitive?: boolean }>;
       hooks?: string;
       mcpServers?: string;
     };
+    const packageMetadata = readJson('package.json') as { version: string };
 
     expect(plugin.name).toBe('claude-vision-bridge');
     expect(plugin.displayName).toBe('Claude Vision Bridge');
+    expect(plugin.version).toBe('0.1.6');
+    expect(plugin.version).toBe(packageMetadata.version);
     expect(plugin.license).toBe('MIT');
     expect(plugin.defaultEnabled).toBe(false);
     expect(plugin.userConfig.omlx_api_key).toMatchObject({ sensitive: true });

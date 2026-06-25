@@ -177,7 +177,7 @@ function manualMcpUsage(config) {
 }
 async function createInMemorySession() {
     const server = await createMcpServer();
-    const client = new Client({ name: 'vision-bridge-manual-command', version: '0.1.5' }, { capabilities: {} });
+    const client = new Client({ name: 'vision-bridge-manual-command', version: '0.1.6' }, { capabilities: {} });
     const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
     try {
         await server.connect(serverTransport);

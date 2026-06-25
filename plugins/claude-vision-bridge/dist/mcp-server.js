@@ -26208,7 +26208,7 @@ async function handleMcpToolCall(call) {
 }
 async function createMcpServer() {
   const server = new Server(
-    { name: "vision-bridge", version: "0.1.5" },
+    { name: "vision-bridge", version: "0.1.6" },
     { capabilities: { tools: {} } }
   );
   server.setRequestHandler(ListToolsRequestSchema, async () => ({
@@ -26225,7 +26225,7 @@ async function createMcpServer() {
 }
 function buildDoctorOutput(config2) {
   return {
-    version: "0.1.5",
+    version: "0.1.6",
     providerOrder: config2.providerOrder,
     remoteFallback: config2.allowRemoteFallback,
     pluginDataDir: config2.pluginDataDir,
