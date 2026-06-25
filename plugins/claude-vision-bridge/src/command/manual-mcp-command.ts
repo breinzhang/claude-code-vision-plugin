@@ -1,5 +1,13 @@
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { InMemoryTransport } from '@modelcontextprotocol/sdk/inMemory.js';
+import {
+  CallToolResultSchema,
+  type CallToolResult,
+  type Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import { inferVisionMode } from '../core/infer-vision-mode.js';
 import type { ImageSource, PluginConfig } from '../core/types.js';
+import { createMcpServer } from '../mcp/server.js';
 import { extractSourcesFromPrompt } from '../sources/extract-from-prompt.js';
 
 const defaultImagePrompt = 'Describe the image for a coding agent.';
@@ -7,6 +15,50 @@ const defaultImagePrompt = 'Describe the image for a coding agent.';
 export type ParsedManualMcpCommand =
   | { kind: 'list-tools' }
   | { kind: 'call-tool'; toolName: string; arguments: Record<string, unknown> };
+
+export interface ManualMcpSession {
+  listTools(): Promise<{ tools: Tool[] }>;
+  callTool(input: { name: string; arguments: Record<string, unknown> }): Promise<CallToolResult>;
+  close(): Promise<void>;
+}
+
+export interface ManualMcpDependencies {
+  createSession(): Promise<ManualMcpSession>;
+}
+
+export interface ManualMcpExecutionInput {
+  commandArgs: string;
+  originalPrompt: string;
+  cwd: string;
+  config: PluginConfig;
+}
+
+export async function executeManualMcpCommand(
+  input: ManualMcpExecutionInput,
+  dependencies: ManualMcpDependencies = { createSession: createInMemorySession },
+): Promise<string> {
+  const session = await dependencies.createSession();
+
+  try {
+    const listed = await session.listTools();
+    const parsed = parseManualMcpCommand({
+      commandArgs: input.commandArgs,
+      originalPrompt: input.originalPrompt,
+      config: input.config,
+      availableToolNames: listed.tools.map((tool) => tool.name),
+    });
+
+    if (parsed.kind === 'list-tools') return renderToolList(listed.tools);
+
+    const result = await session.callTool({
+      name: parsed.toolName,
+      arguments: parsed.arguments,
+    });
+    return renderToolResult(parsed.toolName, result);
+  } finally {
+    await session.close();
+  }
+}
 
 export function parseManualMcpCommand(input: {
   commandArgs: string;
@@ -187,4 +239,56 @@ function manualMcpUsage(config: PluginConfig): string {
     `Subcommands: ${config.mcpAnalyzeCommand}, ${config.mcpDoctorCommand}, ${config.mcpCleanCommand}, ${config.mcpToolsCommand}`,
     'Exact tools: analyze_image, doctor_providers, clear_vision_cache',
   ].join('\n');
+}
+
+async function createInMemorySession(): Promise<ManualMcpSession> {
+  const server = await createMcpServer();
+  const client = new Client(
+    { name: 'vision-bridge-manual-command', version: '0.1.5' },
+    { capabilities: {} },
+  );
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+
+  try {
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+  } catch (error) {
+    await Promise.allSettled([client.close(), server.close()]);
+    throw error;
+  }
+
+  return {
+    listTools: () => client.listTools(),
+    callTool: async ({ name, arguments: args }) => {
+      const result = await client.callTool({ name, arguments: args });
+      return CallToolResultSchema.parse(result);
+    },
+    close: async () => {
+      await Promise.allSettled([client.close(), server.close()]);
+    },
+  };
+}
+
+function renderToolList(tools: Tool[]): string {
+  const lines = tools.map((tool) =>
+    tool.description ? `- \`${tool.name}\`: ${tool.description}` : `- \`${tool.name}\``,
+  );
+  return ['## Vision Bridge MCP Tools', '', ...lines].join('\n');
+}
+
+function renderToolResult(toolName: string, result: CallToolResult): string {
+  const textBlocks = result.content
+    .filter((block): block is Extract<(typeof result.content)[number], { type: 'text' }> => {
+      return block.type === 'text';
+    })
+    .map((block) => block.text);
+
+  const body =
+    textBlocks.length > 0
+      ? textBlocks.join('\n\n')
+      : result.structuredContent
+        ? JSON.stringify(result.structuredContent, null, 2)
+        : '(Tool completed without text output.)';
+
+  return [`## Vision Bridge MCP Tool: ${toolName}`, '', body].join('\n');
 }

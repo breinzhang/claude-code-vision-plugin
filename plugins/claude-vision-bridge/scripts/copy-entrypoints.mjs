@@ -4,6 +4,10 @@ import { build } from 'esbuild';
 
 const entries = [
   { entry: 'src/hook/handler.ts', outfile: 'dist/hook-handler.js' },
+  {
+    entry: 'src/hook/manual-mcp-command-handler.ts',
+    outfile: 'dist/manual-mcp-command-handler.js',
+  },
   { entry: 'src/mcp/server.ts', outfile: 'dist/mcp-server.js' },
   { entry: 'src/bin/cc-vision-doctor.ts', outfile: 'dist/bin/cc-vision-doctor.js' },
 ];
