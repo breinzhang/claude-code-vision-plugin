@@ -14645,6 +14645,7 @@ var providerConfigSchema = external_exports.object({
   enabled: external_exports.boolean(),
   remote: external_exports.boolean()
 });
+var commandAliasSchema = external_exports.string().regex(/^[a-z0-9][a-z0-9_-]*$/i);
 var PluginConfigSchema = external_exports.object({
   pluginRoot: external_exports.string().default(process.cwd()),
   pluginDataDir: external_exports.string().default(".vision-data"),
@@ -14659,6 +14660,10 @@ var PluginConfigSchema = external_exports.object({
   providerTimeoutMs: external_exports.number().int().min(1e3).max(6e4).default(2e4),
   mcpTimeoutMs: external_exports.number().int().min(1e3).max(12e4).default(6e4),
   maxOutputChars: external_exports.number().int().min(1e3).max(1e4).default(8e3),
+  mcpAnalyzeCommand: commandAliasSchema.default("analyze"),
+  mcpDoctorCommand: commandAliasSchema.default("doctor"),
+  mcpCleanCommand: commandAliasSchema.default("clean"),
+  mcpToolsCommand: commandAliasSchema.default("tools"),
   providers: external_exports.record(ProviderIdSchema, providerConfigSchema).default({
     ollama: {
       id: "ollama",
@@ -14689,6 +14694,19 @@ var PluginConfigSchema = external_exports.object({
       remote: true
     }
   })
+}).superRefine((config2, context) => {
+  const aliases = [
+    config2.mcpAnalyzeCommand,
+    config2.mcpDoctorCommand,
+    config2.mcpCleanCommand,
+    config2.mcpToolsCommand
+  ];
+  if (new Set(aliases).size !== aliases.length) {
+    context.addIssue({
+      code: external_exports.ZodIssueCode.custom,
+      message: "Manual MCP command aliases must be unique."
+    });
+  }
 });
 
 // src/core/vision-service.ts
@@ -15756,6 +15774,10 @@ function loadConfig(env = process.env) {
     providerTimeoutMs: numEnv(pluginOption(env, settingsOptions, "provider_timeout_ms"), 2e4),
     mcpTimeoutMs: numEnv(pluginOption(env, settingsOptions, "mcp_timeout_ms"), 6e4),
     maxOutputChars: numEnv(pluginOption(env, settingsOptions, "max_output_chars"), 8e3),
+    mcpAnalyzeCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_analyze_command")) ?? "analyze",
+    mcpDoctorCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_doctor_command")) ?? "doctor",
+    mcpCleanCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_clean_command")) ?? "clean",
+    mcpToolsCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_tools_command")) ?? "tools",
     providers: {
       ollama: {
         id: "ollama",
@@ -15871,11 +15893,21 @@ function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+// src/core/infer-vision-mode.ts
+function inferVisionMode(prompt) {
+  if (/\bocr\b/i.test(prompt)) return "ocr";
+  if (/(提取|识别|读取|转写).{0,12}(文字|文本)/.test(prompt)) return "ocr";
+  if (/(看得见|可见).{0,8}(文字|文本)/.test(prompt)) return "ocr";
+  if (/\b(extract|read|transcribe)\b.{0,24}\b(visible\s+)?text\b/i.test(prompt)) return "ocr";
+  if (/\bvisible\s+text\b/i.test(prompt)) return "ocr";
+  return "general";
+}
+
 // src/hook/handler.ts
 function parseHookInputToRequests(input) {
-  if (hasExplicitMcpVisionIntent(input.prompt)) return [];
+  if (isManualMcpCommandPrompt(input.prompt)) return [];
   const sources = extractSourcesFromPrompt(input.prompt);
-  const mode = inferHookMode(input.prompt);
+  const mode = inferVisionMode(input.prompt);
   return sources.map(
     (source) => AnalyzeImageRequestSchema.parse({
       source,
@@ -15886,17 +15918,8 @@ function parseHookInputToRequests(input) {
     })
   );
 }
-function hasExplicitMcpVisionIntent(prompt) {
-  if (/analyze_image|doctor_providers|clear_vision_cache|vision[-\s]?bridge/i.test(prompt)) return true;
-  return /\bmcp\b/i.test(prompt) && /(vision|image|screenshot|图片|截图|识图|视觉|看图)/i.test(prompt);
-}
-function inferHookMode(prompt) {
-  if (/\bocr\b/i.test(prompt)) return "ocr";
-  if (/(提取|识别|读取|转写).{0,12}(文字|文本)/.test(prompt)) return "ocr";
-  if (/(看得见|可见).{0,8}(文字|文本)/.test(prompt)) return "ocr";
-  if (/\b(extract|read|transcribe)\b.{0,24}\b(visible\s+)?text\b/i.test(prompt)) return "ocr";
-  if (/\bvisible\s+text\b/i.test(prompt)) return "ocr";
-  return "general";
+function isManualMcpCommandPrompt(prompt) {
+  return /^\/claude-vision-bridge:mcp(?:\s|$)/i.test(prompt.trimStart());
 }
 function buildHookOutput(markdowns) {
   return {
@@ -15947,6 +15970,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 }
 export {
   buildHookOutput,
+  isManualMcpCommandPrompt,
   parseHookInputToRequests,
   runHook
 };

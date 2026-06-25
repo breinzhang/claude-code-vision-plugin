@@ -2,12 +2,12 @@
 
 Claude Vision Bridge adds structured vision context to Claude Code when your main model does not support image input.
 
-It provides both:
+It provides:
 
 - a `UserPromptSubmit` Hook that injects image analysis as `additionalContext`
-- an MCP server with `analyze_image`, `doctor_providers`, and `clear_vision_cache`
+- a user-only `/claude-vision-bridge:mcp` command for explicit MCP execution
 
-The Hook and MCP entrypoints share one VisionService for source resolution, security policy, cache, provider routing, normalization, and failure artifacts.
+The automatic Hook and manual MCP command share one VisionService for source resolution, security policy, cache, provider routing, normalization, and failure artifacts.
 
 ## Install From Marketplace
 
@@ -85,36 +85,58 @@ For pasted screenshots on macOS, the Hook reads the current system clipboard ima
 
 If analysis fails, the Hook injects a visible `FailureArtifact` and does not block the prompt.
 
-## MCP Usage
+Normal pasted images use this Hook path only. The Hook skips automatic analysis
+only when the prompt starts with the exact manual command described below.
 
-`analyze_image` supports local paths, URLs, clipboard images, and base64 image input:
+## Manual MCP Command
 
-```json
-{ "source": { "type": "path", "path": "./screens/error.png" } }
+MCP tools are intentionally absent from the main Claude conversation and from
+`/mcp`. They run only when you explicitly enter:
+
+```text
+/claude-vision-bridge:mcp analyze [Image #1] 图片中显示的是几点？
+/claude-vision-bridge:mcp analyze ./screens/error.png 描述错误
+/claude-vision-bridge:mcp doctor
+/claude-vision-bridge:mcp clean failure
+/claude-vision-bridge:mcp tools
 ```
 
-```json
-{ "source": { "type": "url", "url": "https://example.com/screenshot.png" } }
+`analyze` must be present before the pasted image, path, or URL. It accepts
+exactly one image source and does not require JSON.
+
+The exact current MCP tool names remain stable command entrypoints:
+
+```text
+/claude-vision-bridge:mcp analyze_image [Image #1] 读取文字
+/claude-vision-bridge:mcp doctor_providers
+/claude-vision-bridge:mcp clear_vision_cache success
 ```
 
-```json
-{ "source": { "type": "clipboard" } }
+Future tools returned by the `tools` command can be called by exact name with an
+optional JSON object:
+
+```text
+/claude-vision-bridge:mcp future_tool {"option":"value"}
 ```
+
+The four short aliases are configurable in `~/.claude/settings.json`:
 
 ```json
 {
-  "source": {
-    "type": "base64",
-    "mime": "image/png",
-    "data": "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII="
+  "pluginConfigs": {
+    "claude-vision-bridge@brein-claude-tools": {
+      "options": {
+        "mcp_analyze_command": "analyze",
+        "mcp_doctor_command": "doctor",
+        "mcp_clean_command": "clean",
+        "mcp_tools_command": "tools"
+      }
+    }
   }
 }
 ```
 
-Other tools:
-
-- `doctor_providers`: prints provider and runtime diagnostics with secrets redacted.
-- `clear_vision_cache`: clears `all`, `success`, or `failure` cache entries.
+The fixed `/claude-vision-bridge:mcp` command name is not configurable.
 
 ## Security Defaults
 
@@ -141,10 +163,10 @@ Success cache entries are keyed by image bytes, request mode, prompt, provider o
 
 ## Diagnostics
 
-Through MCP, call:
+Run the manual command:
 
 ```text
-doctor_providers
+/claude-vision-bridge:mcp doctor
 ```
 
 Or run the built CLI:

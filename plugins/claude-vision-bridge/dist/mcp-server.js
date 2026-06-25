@@ -24892,6 +24892,7 @@ var providerConfigSchema = external_exports.object({
   enabled: external_exports.boolean(),
   remote: external_exports.boolean()
 });
+var commandAliasSchema = external_exports.string().regex(/^[a-z0-9][a-z0-9_-]*$/i);
 var PluginConfigSchema = external_exports.object({
   pluginRoot: external_exports.string().default(process.cwd()),
   pluginDataDir: external_exports.string().default(".vision-data"),
@@ -24906,6 +24907,10 @@ var PluginConfigSchema = external_exports.object({
   providerTimeoutMs: external_exports.number().int().min(1e3).max(6e4).default(2e4),
   mcpTimeoutMs: external_exports.number().int().min(1e3).max(12e4).default(6e4),
   maxOutputChars: external_exports.number().int().min(1e3).max(1e4).default(8e3),
+  mcpAnalyzeCommand: commandAliasSchema.default("analyze"),
+  mcpDoctorCommand: commandAliasSchema.default("doctor"),
+  mcpCleanCommand: commandAliasSchema.default("clean"),
+  mcpToolsCommand: commandAliasSchema.default("tools"),
   providers: external_exports.record(ProviderIdSchema, providerConfigSchema).default({
     ollama: {
       id: "ollama",
@@ -24936,6 +24941,19 @@ var PluginConfigSchema = external_exports.object({
       remote: true
     }
   })
+}).superRefine((config2, context) => {
+  const aliases = [
+    config2.mcpAnalyzeCommand,
+    config2.mcpDoctorCommand,
+    config2.mcpCleanCommand,
+    config2.mcpToolsCommand
+  ];
+  if (new Set(aliases).size !== aliases.length) {
+    context.addIssue({
+      code: external_exports.ZodIssueCode.custom,
+      message: "Manual MCP command aliases must be unique."
+    });
+  }
 });
 
 // src/cache/cache-manager.ts
@@ -25061,6 +25079,10 @@ function loadConfig(env = process.env) {
     providerTimeoutMs: numEnv(pluginOption(env, settingsOptions, "provider_timeout_ms"), 2e4),
     mcpTimeoutMs: numEnv(pluginOption(env, settingsOptions, "mcp_timeout_ms"), 6e4),
     maxOutputChars: numEnv(pluginOption(env, settingsOptions, "max_output_chars"), 8e3),
+    mcpAnalyzeCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_analyze_command")) ?? "analyze",
+    mcpDoctorCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_doctor_command")) ?? "doctor",
+    mcpCleanCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_clean_command")) ?? "clean",
+    mcpToolsCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_tools_command")) ?? "tools",
     providers: {
       ollama: {
         id: "ollama",

@@ -126,7 +126,9 @@ const providerConfigSchema = z.object({
     enabled: z.boolean(),
     remote: z.boolean(),
 });
-export const PluginConfigSchema = z.object({
+const commandAliasSchema = z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i);
+export const PluginConfigSchema = z
+    .object({
     pluginRoot: z.string().default(process.cwd()),
     pluginDataDir: z.string().default('.vision-data'),
     providerOrder: z.array(ProviderIdSchema).default([...providerOrderDefault]),
@@ -140,6 +142,10 @@ export const PluginConfigSchema = z.object({
     providerTimeoutMs: z.number().int().min(1000).max(60000).default(20000),
     mcpTimeoutMs: z.number().int().min(1000).max(120000).default(60000),
     maxOutputChars: z.number().int().min(1000).max(10000).default(8000),
+    mcpAnalyzeCommand: commandAliasSchema.default('analyze'),
+    mcpDoctorCommand: commandAliasSchema.default('doctor'),
+    mcpCleanCommand: commandAliasSchema.default('clean'),
+    mcpToolsCommand: commandAliasSchema.default('tools'),
     providers: z.record(ProviderIdSchema, providerConfigSchema).default({
         ollama: {
             id: 'ollama',
@@ -170,5 +176,19 @@ export const PluginConfigSchema = z.object({
             remote: true,
         },
     }),
+})
+    .superRefine((config, context) => {
+    const aliases = [
+        config.mcpAnalyzeCommand,
+        config.mcpDoctorCommand,
+        config.mcpCleanCommand,
+        config.mcpToolsCommand,
+    ];
+    if (new Set(aliases).size !== aliases.length) {
+        context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Manual MCP command aliases must be unique.',
+        });
+    }
 });
 //# sourceMappingURL=schema.js.map

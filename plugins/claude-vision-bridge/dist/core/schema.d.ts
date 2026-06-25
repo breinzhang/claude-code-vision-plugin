@@ -264,6 +264,10 @@ export declare const PluginConfigSchema: z.ZodObject<{
     providerTimeoutMs: z.ZodDefault<z.ZodNumber>;
     mcpTimeoutMs: z.ZodDefault<z.ZodNumber>;
     maxOutputChars: z.ZodDefault<z.ZodNumber>;
+    mcpAnalyzeCommand: z.ZodDefault<z.ZodString>;
+    mcpDoctorCommand: z.ZodDefault<z.ZodString>;
+    mcpCleanCommand: z.ZodDefault<z.ZodString>;
+    mcpToolsCommand: z.ZodDefault<z.ZodString>;
     providers: z.ZodDefault<z.ZodRecord<z.ZodEnum<{
         ollama: "ollama";
         omlx: "omlx";

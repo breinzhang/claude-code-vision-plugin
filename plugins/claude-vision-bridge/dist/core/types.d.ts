@@ -134,5 +134,9 @@ export interface PluginConfig {
     providerTimeoutMs: number;
     mcpTimeoutMs: number;
     maxOutputChars: number;
+    mcpAnalyzeCommand: string;
+    mcpDoctorCommand: string;
+    mcpCleanCommand: string;
+    mcpToolsCommand: string;
     providers: Record<ProviderId, ProviderConfig>;
 }

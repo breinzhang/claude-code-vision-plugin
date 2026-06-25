@@ -13,6 +13,19 @@
           }
         ]
       }
+    ],
+    "UserPromptExpansion": [
+      {
+        "matcher": "claude-vision-bridge:mcp",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": ["${CLAUDE_PLUGIN_ROOT}/dist/manual-mcp-command-handler.js"],
+            "timeout": 120
+          }
+        ]
+      }
     ]
   }
 }

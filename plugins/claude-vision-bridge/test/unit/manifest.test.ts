@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 function readJson(path: string): unknown {
@@ -44,23 +44,37 @@ describe('plugin and marketplace manifests', () => {
     expect(plugin).not.toHaveProperty('mcpServers');
   });
 
-  it('passes every plugin option through to the MCP server environment', () => {
-    const plugin = readJson('.claude-plugin/plugin.json') as {
-      userConfig: Record<string, unknown>;
-    };
-    const mcp = readJson('.mcp.json') as {
-      mcpServers: {
-        'vision-bridge': {
-          env: Record<string, string>;
-        };
+  it('packages a manual-only MCP skill without a main-session MCP server', () => {
+    expect(existsSync(resolve('.mcp.json'))).toBe(false);
+
+    const skill = readFileSync(resolve('skills/mcp/SKILL.md'), 'utf8');
+    expect(skill).toContain('disable-model-invocation: true');
+
+    const hooks = readJson('hooks/hooks.json') as {
+      hooks: {
+        UserPromptSubmit: unknown[];
+        UserPromptExpansion: Array<{
+          matcher: string;
+          hooks: Array<{ args: string[] }>;
+        }>;
       };
     };
 
-    const env = mcp.mcpServers['vision-bridge'].env;
-    expect(env.CLAUDE_VISION_PLUGIN_DATA).toBe('${CLAUDE_PLUGIN_DATA}');
-    for (const optionName of Object.keys(plugin.userConfig)) {
-      const envName = `CLAUDE_PLUGIN_OPTION_${optionName.toUpperCase()}`;
-      expect(env[envName]).toBe(`\${${envName}}`);
-    }
+    expect(hooks.hooks.UserPromptSubmit).toHaveLength(1);
+    expect(hooks.hooks.UserPromptExpansion[0].matcher).toBe('claude-vision-bridge:mcp');
+    expect(hooks.hooks.UserPromptExpansion[0].hooks[0].args).toContain(
+      '${CLAUDE_PLUGIN_ROOT}/dist/manual-mcp-command-handler.js',
+    );
+  });
+
+  it('declares configurable manual MCP aliases', () => {
+    const plugin = readJson('.claude-plugin/plugin.json') as {
+      userConfig: Record<string, { default?: string }>;
+    };
+
+    expect(plugin.userConfig.mcp_analyze_command.default).toBe('analyze');
+    expect(plugin.userConfig.mcp_doctor_command.default).toBe('doctor');
+    expect(plugin.userConfig.mcp_clean_command.default).toBe('clean');
+    expect(plugin.userConfig.mcp_tools_command.default).toBe('tools');
   });
 });

@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -6889,253 +6888,8 @@ var require_dist = __commonJS({
   }
 });
 
-// src/config/load-config.ts
-import { readFileSync } from "node:fs";
-import { homedir } from "node:os";
-import { join } from "node:path";
-
-// node_modules/zod/v4/classic/external.js
-var external_exports = {};
-__export(external_exports, {
-  $brand: () => $brand,
-  $input: () => $input,
-  $output: () => $output,
-  NEVER: () => NEVER,
-  TimePrecision: () => TimePrecision,
-  ZodAny: () => ZodAny,
-  ZodArray: () => ZodArray,
-  ZodBase64: () => ZodBase64,
-  ZodBase64URL: () => ZodBase64URL,
-  ZodBigInt: () => ZodBigInt,
-  ZodBigIntFormat: () => ZodBigIntFormat,
-  ZodBoolean: () => ZodBoolean,
-  ZodCIDRv4: () => ZodCIDRv4,
-  ZodCIDRv6: () => ZodCIDRv6,
-  ZodCUID: () => ZodCUID,
-  ZodCUID2: () => ZodCUID2,
-  ZodCatch: () => ZodCatch,
-  ZodCodec: () => ZodCodec,
-  ZodCustom: () => ZodCustom,
-  ZodCustomStringFormat: () => ZodCustomStringFormat,
-  ZodDate: () => ZodDate,
-  ZodDefault: () => ZodDefault,
-  ZodDiscriminatedUnion: () => ZodDiscriminatedUnion,
-  ZodE164: () => ZodE164,
-  ZodEmail: () => ZodEmail,
-  ZodEmoji: () => ZodEmoji,
-  ZodEnum: () => ZodEnum,
-  ZodError: () => ZodError,
-  ZodExactOptional: () => ZodExactOptional,
-  ZodFile: () => ZodFile,
-  ZodFirstPartyTypeKind: () => ZodFirstPartyTypeKind,
-  ZodFunction: () => ZodFunction,
-  ZodGUID: () => ZodGUID,
-  ZodIPv4: () => ZodIPv4,
-  ZodIPv6: () => ZodIPv6,
-  ZodISODate: () => ZodISODate,
-  ZodISODateTime: () => ZodISODateTime,
-  ZodISODuration: () => ZodISODuration,
-  ZodISOTime: () => ZodISOTime,
-  ZodIntersection: () => ZodIntersection,
-  ZodIssueCode: () => ZodIssueCode,
-  ZodJWT: () => ZodJWT,
-  ZodKSUID: () => ZodKSUID,
-  ZodLazy: () => ZodLazy,
-  ZodLiteral: () => ZodLiteral,
-  ZodMAC: () => ZodMAC,
-  ZodMap: () => ZodMap,
-  ZodNaN: () => ZodNaN,
-  ZodNanoID: () => ZodNanoID,
-  ZodNever: () => ZodNever,
-  ZodNonOptional: () => ZodNonOptional,
-  ZodNull: () => ZodNull,
-  ZodNullable: () => ZodNullable,
-  ZodNumber: () => ZodNumber,
-  ZodNumberFormat: () => ZodNumberFormat,
-  ZodObject: () => ZodObject,
-  ZodOptional: () => ZodOptional,
-  ZodPipe: () => ZodPipe,
-  ZodPrefault: () => ZodPrefault,
-  ZodPreprocess: () => ZodPreprocess,
-  ZodPromise: () => ZodPromise,
-  ZodReadonly: () => ZodReadonly,
-  ZodRealError: () => ZodRealError,
-  ZodRecord: () => ZodRecord,
-  ZodSet: () => ZodSet,
-  ZodString: () => ZodString,
-  ZodStringFormat: () => ZodStringFormat,
-  ZodSuccess: () => ZodSuccess,
-  ZodSymbol: () => ZodSymbol,
-  ZodTemplateLiteral: () => ZodTemplateLiteral,
-  ZodTransform: () => ZodTransform,
-  ZodTuple: () => ZodTuple,
-  ZodType: () => ZodType,
-  ZodULID: () => ZodULID,
-  ZodURL: () => ZodURL,
-  ZodUUID: () => ZodUUID,
-  ZodUndefined: () => ZodUndefined,
-  ZodUnion: () => ZodUnion,
-  ZodUnknown: () => ZodUnknown,
-  ZodVoid: () => ZodVoid,
-  ZodXID: () => ZodXID,
-  ZodXor: () => ZodXor,
-  _ZodString: () => _ZodString,
-  _default: () => _default2,
-  _function: () => _function,
-  any: () => any,
-  array: () => array,
-  base64: () => base642,
-  base64url: () => base64url2,
-  bigint: () => bigint2,
-  boolean: () => boolean2,
-  catch: () => _catch2,
-  check: () => check,
-  cidrv4: () => cidrv42,
-  cidrv6: () => cidrv62,
-  clone: () => clone,
-  codec: () => codec,
-  coerce: () => coerce_exports,
-  config: () => config,
-  core: () => core_exports2,
-  cuid: () => cuid3,
-  cuid2: () => cuid22,
-  custom: () => custom,
-  date: () => date3,
-  decode: () => decode2,
-  decodeAsync: () => decodeAsync2,
-  describe: () => describe2,
-  discriminatedUnion: () => discriminatedUnion,
-  e164: () => e1642,
-  email: () => email2,
-  emoji: () => emoji2,
-  encode: () => encode2,
-  encodeAsync: () => encodeAsync2,
-  endsWith: () => _endsWith,
-  enum: () => _enum2,
-  exactOptional: () => exactOptional,
-  file: () => file,
-  flattenError: () => flattenError,
-  float32: () => float32,
-  float64: () => float64,
-  formatError: () => formatError,
-  fromJSONSchema: () => fromJSONSchema,
-  function: () => _function,
-  getErrorMap: () => getErrorMap,
-  globalRegistry: () => globalRegistry,
-  gt: () => _gt,
-  gte: () => _gte,
-  guid: () => guid2,
-  hash: () => hash,
-  hex: () => hex2,
-  hostname: () => hostname2,
-  httpUrl: () => httpUrl,
-  includes: () => _includes,
-  instanceof: () => _instanceof,
-  int: () => int,
-  int32: () => int32,
-  int64: () => int64,
-  intersection: () => intersection,
-  invertCodec: () => invertCodec,
-  ipv4: () => ipv42,
-  ipv6: () => ipv62,
-  iso: () => iso_exports,
-  json: () => json,
-  jwt: () => jwt,
-  keyof: () => keyof,
-  ksuid: () => ksuid2,
-  lazy: () => lazy,
-  length: () => _length,
-  literal: () => literal,
-  locales: () => locales_exports,
-  looseObject: () => looseObject,
-  looseRecord: () => looseRecord,
-  lowercase: () => _lowercase,
-  lt: () => _lt,
-  lte: () => _lte,
-  mac: () => mac2,
-  map: () => map,
-  maxLength: () => _maxLength,
-  maxSize: () => _maxSize,
-  meta: () => meta2,
-  mime: () => _mime,
-  minLength: () => _minLength,
-  minSize: () => _minSize,
-  multipleOf: () => _multipleOf,
-  nan: () => nan,
-  nanoid: () => nanoid2,
-  nativeEnum: () => nativeEnum,
-  negative: () => _negative,
-  never: () => never,
-  nonnegative: () => _nonnegative,
-  nonoptional: () => nonoptional,
-  nonpositive: () => _nonpositive,
-  normalize: () => _normalize,
-  null: () => _null3,
-  nullable: () => nullable,
-  nullish: () => nullish2,
-  number: () => number2,
-  object: () => object,
-  optional: () => optional,
-  overwrite: () => _overwrite,
-  parse: () => parse2,
-  parseAsync: () => parseAsync2,
-  partialRecord: () => partialRecord,
-  pipe: () => pipe,
-  positive: () => _positive,
-  prefault: () => prefault,
-  preprocess: () => preprocess,
-  prettifyError: () => prettifyError,
-  promise: () => promise,
-  property: () => _property,
-  readonly: () => readonly,
-  record: () => record,
-  refine: () => refine,
-  regex: () => _regex,
-  regexes: () => regexes_exports,
-  registry: () => registry,
-  safeDecode: () => safeDecode2,
-  safeDecodeAsync: () => safeDecodeAsync2,
-  safeEncode: () => safeEncode2,
-  safeEncodeAsync: () => safeEncodeAsync2,
-  safeParse: () => safeParse2,
-  safeParseAsync: () => safeParseAsync2,
-  set: () => set,
-  setErrorMap: () => setErrorMap,
-  size: () => _size,
-  slugify: () => _slugify,
-  startsWith: () => _startsWith,
-  strictObject: () => strictObject,
-  string: () => string2,
-  stringFormat: () => stringFormat,
-  stringbool: () => stringbool,
-  success: () => success,
-  superRefine: () => superRefine,
-  symbol: () => symbol,
-  templateLiteral: () => templateLiteral,
-  toJSONSchema: () => toJSONSchema,
-  toLowerCase: () => _toLowerCase,
-  toUpperCase: () => _toUpperCase,
-  transform: () => transform,
-  treeifyError: () => treeifyError,
-  trim: () => _trim,
-  tuple: () => tuple,
-  uint32: () => uint32,
-  uint64: () => uint64,
-  ulid: () => ulid2,
-  undefined: () => _undefined3,
-  union: () => union,
-  unknown: () => unknown,
-  uppercase: () => _uppercase,
-  url: () => url,
-  util: () => util_exports,
-  uuid: () => uuid2,
-  uuidv4: () => uuidv4,
-  uuidv6: () => uuidv6,
-  uuidv7: () => uuidv7,
-  void: () => _void2,
-  xid: () => xid2,
-  xor: () => xor
-});
+// src/hook/manual-mcp-command-handler.ts
+import { readFileSync as readFileSync5 } from "node:fs";
 
 // node_modules/zod/v4/core/index.js
 var core_exports2 = {};
@@ -19284,6 +19038,312 @@ var JSONSchemaGenerator = class {
 // node_modules/zod/v4/core/json-schema.js
 var json_schema_exports = {};
 
+// node_modules/@modelcontextprotocol/sdk/dist/esm/server/zod-compat.js
+function isZ4Schema(s) {
+  const schema = s;
+  return !!schema._zod;
+}
+function safeParse2(schema, data) {
+  if (isZ4Schema(schema)) {
+    const result2 = safeParse(schema, data);
+    return result2;
+  }
+  const v3Schema = schema;
+  const result = v3Schema.safeParse(data);
+  return result;
+}
+function getObjectShape(schema) {
+  if (!schema)
+    return void 0;
+  let rawShape;
+  if (isZ4Schema(schema)) {
+    const v4Schema = schema;
+    rawShape = v4Schema._zod?.def?.shape;
+  } else {
+    const v3Schema = schema;
+    rawShape = v3Schema.shape;
+  }
+  if (!rawShape)
+    return void 0;
+  if (typeof rawShape === "function") {
+    try {
+      return rawShape();
+    } catch {
+      return void 0;
+    }
+  }
+  return rawShape;
+}
+function getLiteralValue(schema) {
+  if (isZ4Schema(schema)) {
+    const v4Schema = schema;
+    const def2 = v4Schema._zod?.def;
+    if (def2) {
+      if (def2.value !== void 0)
+        return def2.value;
+      if (Array.isArray(def2.values) && def2.values.length > 0) {
+        return def2.values[0];
+      }
+    }
+  }
+  const v3Schema = schema;
+  const def = v3Schema._def;
+  if (def) {
+    if (def.value !== void 0)
+      return def.value;
+    if (Array.isArray(def.values) && def.values.length > 0) {
+      return def.values[0];
+    }
+  }
+  const directValue = schema.value;
+  if (directValue !== void 0)
+    return directValue;
+  return void 0;
+}
+
+// node_modules/zod/v4/classic/external.js
+var external_exports = {};
+__export(external_exports, {
+  $brand: () => $brand,
+  $input: () => $input,
+  $output: () => $output,
+  NEVER: () => NEVER,
+  TimePrecision: () => TimePrecision,
+  ZodAny: () => ZodAny,
+  ZodArray: () => ZodArray,
+  ZodBase64: () => ZodBase64,
+  ZodBase64URL: () => ZodBase64URL,
+  ZodBigInt: () => ZodBigInt,
+  ZodBigIntFormat: () => ZodBigIntFormat,
+  ZodBoolean: () => ZodBoolean,
+  ZodCIDRv4: () => ZodCIDRv4,
+  ZodCIDRv6: () => ZodCIDRv6,
+  ZodCUID: () => ZodCUID,
+  ZodCUID2: () => ZodCUID2,
+  ZodCatch: () => ZodCatch,
+  ZodCodec: () => ZodCodec,
+  ZodCustom: () => ZodCustom,
+  ZodCustomStringFormat: () => ZodCustomStringFormat,
+  ZodDate: () => ZodDate,
+  ZodDefault: () => ZodDefault,
+  ZodDiscriminatedUnion: () => ZodDiscriminatedUnion,
+  ZodE164: () => ZodE164,
+  ZodEmail: () => ZodEmail,
+  ZodEmoji: () => ZodEmoji,
+  ZodEnum: () => ZodEnum,
+  ZodError: () => ZodError,
+  ZodExactOptional: () => ZodExactOptional,
+  ZodFile: () => ZodFile,
+  ZodFirstPartyTypeKind: () => ZodFirstPartyTypeKind,
+  ZodFunction: () => ZodFunction,
+  ZodGUID: () => ZodGUID,
+  ZodIPv4: () => ZodIPv4,
+  ZodIPv6: () => ZodIPv6,
+  ZodISODate: () => ZodISODate,
+  ZodISODateTime: () => ZodISODateTime,
+  ZodISODuration: () => ZodISODuration,
+  ZodISOTime: () => ZodISOTime,
+  ZodIntersection: () => ZodIntersection,
+  ZodIssueCode: () => ZodIssueCode,
+  ZodJWT: () => ZodJWT,
+  ZodKSUID: () => ZodKSUID,
+  ZodLazy: () => ZodLazy,
+  ZodLiteral: () => ZodLiteral,
+  ZodMAC: () => ZodMAC,
+  ZodMap: () => ZodMap,
+  ZodNaN: () => ZodNaN,
+  ZodNanoID: () => ZodNanoID,
+  ZodNever: () => ZodNever,
+  ZodNonOptional: () => ZodNonOptional,
+  ZodNull: () => ZodNull,
+  ZodNullable: () => ZodNullable,
+  ZodNumber: () => ZodNumber,
+  ZodNumberFormat: () => ZodNumberFormat,
+  ZodObject: () => ZodObject,
+  ZodOptional: () => ZodOptional,
+  ZodPipe: () => ZodPipe,
+  ZodPrefault: () => ZodPrefault,
+  ZodPreprocess: () => ZodPreprocess,
+  ZodPromise: () => ZodPromise,
+  ZodReadonly: () => ZodReadonly,
+  ZodRealError: () => ZodRealError,
+  ZodRecord: () => ZodRecord,
+  ZodSet: () => ZodSet,
+  ZodString: () => ZodString,
+  ZodStringFormat: () => ZodStringFormat,
+  ZodSuccess: () => ZodSuccess,
+  ZodSymbol: () => ZodSymbol,
+  ZodTemplateLiteral: () => ZodTemplateLiteral,
+  ZodTransform: () => ZodTransform,
+  ZodTuple: () => ZodTuple,
+  ZodType: () => ZodType,
+  ZodULID: () => ZodULID,
+  ZodURL: () => ZodURL,
+  ZodUUID: () => ZodUUID,
+  ZodUndefined: () => ZodUndefined,
+  ZodUnion: () => ZodUnion,
+  ZodUnknown: () => ZodUnknown,
+  ZodVoid: () => ZodVoid,
+  ZodXID: () => ZodXID,
+  ZodXor: () => ZodXor,
+  _ZodString: () => _ZodString,
+  _default: () => _default2,
+  _function: () => _function,
+  any: () => any,
+  array: () => array,
+  base64: () => base642,
+  base64url: () => base64url2,
+  bigint: () => bigint2,
+  boolean: () => boolean2,
+  catch: () => _catch2,
+  check: () => check,
+  cidrv4: () => cidrv42,
+  cidrv6: () => cidrv62,
+  clone: () => clone,
+  codec: () => codec,
+  coerce: () => coerce_exports,
+  config: () => config,
+  core: () => core_exports2,
+  cuid: () => cuid3,
+  cuid2: () => cuid22,
+  custom: () => custom,
+  date: () => date3,
+  decode: () => decode2,
+  decodeAsync: () => decodeAsync2,
+  describe: () => describe2,
+  discriminatedUnion: () => discriminatedUnion,
+  e164: () => e1642,
+  email: () => email2,
+  emoji: () => emoji2,
+  encode: () => encode2,
+  encodeAsync: () => encodeAsync2,
+  endsWith: () => _endsWith,
+  enum: () => _enum2,
+  exactOptional: () => exactOptional,
+  file: () => file,
+  flattenError: () => flattenError,
+  float32: () => float32,
+  float64: () => float64,
+  formatError: () => formatError,
+  fromJSONSchema: () => fromJSONSchema,
+  function: () => _function,
+  getErrorMap: () => getErrorMap,
+  globalRegistry: () => globalRegistry,
+  gt: () => _gt,
+  gte: () => _gte,
+  guid: () => guid2,
+  hash: () => hash,
+  hex: () => hex2,
+  hostname: () => hostname2,
+  httpUrl: () => httpUrl,
+  includes: () => _includes,
+  instanceof: () => _instanceof,
+  int: () => int,
+  int32: () => int32,
+  int64: () => int64,
+  intersection: () => intersection,
+  invertCodec: () => invertCodec,
+  ipv4: () => ipv42,
+  ipv6: () => ipv62,
+  iso: () => iso_exports,
+  json: () => json,
+  jwt: () => jwt,
+  keyof: () => keyof,
+  ksuid: () => ksuid2,
+  lazy: () => lazy,
+  length: () => _length,
+  literal: () => literal,
+  locales: () => locales_exports,
+  looseObject: () => looseObject,
+  looseRecord: () => looseRecord,
+  lowercase: () => _lowercase,
+  lt: () => _lt,
+  lte: () => _lte,
+  mac: () => mac2,
+  map: () => map,
+  maxLength: () => _maxLength,
+  maxSize: () => _maxSize,
+  meta: () => meta2,
+  mime: () => _mime,
+  minLength: () => _minLength,
+  minSize: () => _minSize,
+  multipleOf: () => _multipleOf,
+  nan: () => nan,
+  nanoid: () => nanoid2,
+  nativeEnum: () => nativeEnum,
+  negative: () => _negative,
+  never: () => never,
+  nonnegative: () => _nonnegative,
+  nonoptional: () => nonoptional,
+  nonpositive: () => _nonpositive,
+  normalize: () => _normalize,
+  null: () => _null3,
+  nullable: () => nullable,
+  nullish: () => nullish2,
+  number: () => number2,
+  object: () => object2,
+  optional: () => optional,
+  overwrite: () => _overwrite,
+  parse: () => parse2,
+  parseAsync: () => parseAsync2,
+  partialRecord: () => partialRecord,
+  pipe: () => pipe,
+  positive: () => _positive,
+  prefault: () => prefault,
+  preprocess: () => preprocess,
+  prettifyError: () => prettifyError,
+  promise: () => promise,
+  property: () => _property,
+  readonly: () => readonly,
+  record: () => record,
+  refine: () => refine,
+  regex: () => _regex,
+  regexes: () => regexes_exports,
+  registry: () => registry,
+  safeDecode: () => safeDecode2,
+  safeDecodeAsync: () => safeDecodeAsync2,
+  safeEncode: () => safeEncode2,
+  safeEncodeAsync: () => safeEncodeAsync2,
+  safeParse: () => safeParse3,
+  safeParseAsync: () => safeParseAsync2,
+  set: () => set,
+  setErrorMap: () => setErrorMap,
+  size: () => _size,
+  slugify: () => _slugify,
+  startsWith: () => _startsWith,
+  strictObject: () => strictObject,
+  string: () => string2,
+  stringFormat: () => stringFormat,
+  stringbool: () => stringbool,
+  success: () => success,
+  superRefine: () => superRefine,
+  symbol: () => symbol,
+  templateLiteral: () => templateLiteral,
+  toJSONSchema: () => toJSONSchema,
+  toLowerCase: () => _toLowerCase,
+  toUpperCase: () => _toUpperCase,
+  transform: () => transform,
+  treeifyError: () => treeifyError,
+  trim: () => _trim,
+  tuple: () => tuple,
+  uint32: () => uint32,
+  uint64: () => uint64,
+  ulid: () => ulid2,
+  undefined: () => _undefined3,
+  union: () => union,
+  unknown: () => unknown,
+  uppercase: () => _uppercase,
+  url: () => url,
+  util: () => util_exports,
+  uuid: () => uuid2,
+  uuidv4: () => uuidv4,
+  uuidv6: () => uuidv6,
+  uuidv7: () => uuidv7,
+  void: () => _void2,
+  xid: () => xid2,
+  xor: () => xor
+});
+
 // node_modules/zod/v4/classic/schemas.js
 var schemas_exports2 = {};
 __export(schemas_exports2, {
@@ -19418,7 +19478,7 @@ __export(schemas_exports2, {
   nullable: () => nullable,
   nullish: () => nullish2,
   number: () => number2,
-  object: () => object,
+  object: () => object2,
   optional: () => optional,
   partialRecord: () => partialRecord,
   pipe: () => pipe,
@@ -19573,7 +19633,7 @@ var ZodRealError = /* @__PURE__ */ $constructor("ZodError", initializer2, {
 // node_modules/zod/v4/classic/parse.js
 var parse2 = /* @__PURE__ */ _parse(ZodRealError);
 var parseAsync2 = /* @__PURE__ */ _parseAsync(ZodRealError);
-var safeParse2 = /* @__PURE__ */ _safeParse(ZodRealError);
+var safeParse3 = /* @__PURE__ */ _safeParse(ZodRealError);
 var safeParseAsync2 = /* @__PURE__ */ _safeParseAsync(ZodRealError);
 var encode2 = /* @__PURE__ */ _encode(ZodRealError);
 var decode2 = /* @__PURE__ */ _decode(ZodRealError);
@@ -19635,7 +19695,7 @@ var ZodType = /* @__PURE__ */ $constructor("ZodType", (inst, def) => {
   inst.type = def.type;
   Object.defineProperty(inst, "_def", { value: def });
   inst.parse = (data, params) => parse2(inst, data, params, { callee: inst.parse });
-  inst.safeParse = (data, params) => safeParse2(inst, data, params);
+  inst.safeParse = (data, params) => safeParse3(inst, data, params);
   inst.parseAsync = async (data, params) => parseAsync2(inst, data, params, { callee: inst.parseAsync });
   inst.safeParseAsync = async (data, params) => safeParseAsync2(inst, data, params);
   inst.spa = inst.safeParseAsync;
@@ -20293,7 +20353,7 @@ var ZodObject = /* @__PURE__ */ $constructor("ZodObject", (inst, def) => {
     }
   });
 });
-function object(shape, params) {
+function object2(shape, params) {
   const def = {
     type: "object",
     shape: shape ?? {},
@@ -21408,361 +21468,6 @@ function date4(params) {
 // node_modules/zod/v4/classic/external.js
 config(en_default());
 
-// src/core/schema.ts
-var ProviderIdSchema = external_exports.enum(["ollama", "omlx", "llama_cpp", "remote_openai"]);
-var VisionModeSchema = external_exports.enum(["general", "ui", "ocr", "error", "chart", "document-screenshot"]);
-var ImageSourceSchema = external_exports.discriminatedUnion("type", [
-  external_exports.object({ type: external_exports.literal("path"), path: external_exports.string().min(1), origin: external_exports.enum(["hook", "mcp"]) }),
-  external_exports.object({ type: external_exports.literal("url"), url: external_exports.string().url(), origin: external_exports.enum(["hook", "mcp"]) }),
-  external_exports.object({ type: external_exports.literal("clipboard"), origin: external_exports.enum(["hook", "mcp"]) }),
-  external_exports.object({
-    type: external_exports.literal("base64"),
-    mime: external_exports.string().min(1),
-    data: external_exports.string().min(1),
-    origin: external_exports.literal("mcp")
-  })
-]);
-var AnalyzeImageRequestSchema = external_exports.object({
-  source: ImageSourceSchema,
-  mode: VisionModeSchema.default("general"),
-  prompt: external_exports.string().default("Describe the image for a coding agent."),
-  preferredProvider: ProviderIdSchema.optional(),
-  preferredModel: external_exports.string().min(1).optional(),
-  timeoutMs: external_exports.number().int().positive().default(3e4),
-  maxOutputChars: external_exports.number().int().positive().max(1e4).default(8e3)
-});
-var VisionStructuredOutputSchema = external_exports.object({
-  schemaVersion: external_exports.literal("vision.v1"),
-  mode: VisionModeSchema,
-  intentSummary: external_exports.string(),
-  observations: external_exports.array(external_exports.string()),
-  ocrText: external_exports.string().optional(),
-  uiStructure: external_exports.object({
-    layout: external_exports.string().optional(),
-    regions: external_exports.array(
-      external_exports.object({
-        name: external_exports.string(),
-        role: external_exports.string(),
-        text: external_exports.string().optional(),
-        bbox: external_exports.tuple([external_exports.number(), external_exports.number(), external_exports.number(), external_exports.number()]).optional()
-      })
-    ).optional(),
-    likelyIssue: external_exports.string().optional()
-  }).optional(),
-  chartSummary: external_exports.object({
-    title: external_exports.string().optional(),
-    axes: external_exports.array(external_exports.string()).optional(),
-    keyFindings: external_exports.array(external_exports.string()).optional()
-  }).optional(),
-  likelyTechnicalCauses: external_exports.array(external_exports.string()),
-  recommendedCodeSearches: external_exports.array(external_exports.string()),
-  redactions: external_exports.array(external_exports.string()),
-  modelLimitations: external_exports.array(external_exports.string())
-});
-var VisionArtifactSchema = external_exports.object({
-  artifactType: external_exports.literal("success"),
-  schemaVersion: external_exports.literal("vision-artifact.v1"),
-  source: external_exports.object({
-    type: external_exports.enum(["path", "url", "clipboard", "base64"]),
-    originalRef: external_exports.string(),
-    resolvedPath: external_exports.string().optional(),
-    sha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
-    mime: external_exports.string(),
-    bytes: external_exports.number().int().nonnegative()
-  }),
-  provider: external_exports.object({
-    id: ProviderIdSchema,
-    model: external_exports.string(),
-    endpoint: external_exports.string().optional(),
-    fallbackDepth: external_exports.number().int().nonnegative()
-  }),
-  timings: external_exports.object({
-    startedAt: external_exports.string(),
-    completedAt: external_exports.string(),
-    latencyMs: external_exports.number().nonnegative(),
-    cacheHit: external_exports.boolean()
-  }),
-  analysis: VisionStructuredOutputSchema,
-  markdown: external_exports.string()
-});
-var FailureCategorySchema = external_exports.enum([
-  "NO_VALID_IMAGE",
-  "PATH_POLICY_DENIED",
-  "URL_POLICY_DENIED",
-  "CLIPBOARD_UNAVAILABLE",
-  "CLIPBOARD_EMPTY",
-  "INVALID_BASE64",
-  "LOCAL_PROVIDERS_FAILED",
-  "REMOTE_DISABLED",
-  "REMOTE_FAILED",
-  "PROVIDER_TIMEOUT",
-  "MALFORMED_RESPONSE",
-  "INTERNAL_ERROR"
-]);
-var FailureArtifactSchema = external_exports.object({
-  artifactType: external_exports.literal("failure"),
-  schemaVersion: external_exports.literal("vision-failure.v1"),
-  source: external_exports.object({
-    type: external_exports.enum(["path", "url", "clipboard", "base64"]),
-    originalRef: external_exports.string(),
-    resolvedPath: external_exports.string().optional(),
-    sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional()
-  }).optional(),
-  failure: external_exports.object({
-    category: FailureCategorySchema,
-    message: external_exports.string(),
-    attemptedProviders: external_exports.array(
-      external_exports.object({
-        id: external_exports.string(),
-        status: external_exports.enum(["skipped", "failed", "timeout", "circuit_open"]),
-        reason: external_exports.string()
-      })
-    ),
-    remoteFallbackAllowed: external_exports.boolean()
-  }),
-  recommendedNextSteps: external_exports.array(external_exports.string()),
-  markdown: external_exports.string()
-});
-var providerOrderDefault = ["ollama", "omlx", "llama_cpp", "remote_openai"];
-var providerConfigSchema = external_exports.object({
-  id: ProviderIdSchema,
-  baseUrl: external_exports.string(),
-  model: external_exports.string(),
-  apiKey: external_exports.string().optional(),
-  enabled: external_exports.boolean(),
-  remote: external_exports.boolean()
-});
-var commandAliasSchema = external_exports.string().regex(/^[a-z0-9][a-z0-9_-]*$/i);
-var PluginConfigSchema = external_exports.object({
-  pluginRoot: external_exports.string().default(process.cwd()),
-  pluginDataDir: external_exports.string().default(".vision-data"),
-  providerOrder: external_exports.array(ProviderIdSchema).default([...providerOrderDefault]),
-  allowRemoteFallback: external_exports.boolean().default(false),
-  allowHttpUrls: external_exports.boolean().default(false),
-  allowPrivateNetworkUrls: external_exports.boolean().default(false),
-  allowedDirectories: external_exports.array(external_exports.string()).default([]),
-  deniedDirectories: external_exports.array(external_exports.string()).default([]),
-  maxImageBytes: external_exports.number().int().min(1024).max(52428800).default(10485760),
-  hookTimeoutMs: external_exports.number().int().min(1e3).max(3e4).default(3e4),
-  providerTimeoutMs: external_exports.number().int().min(1e3).max(6e4).default(2e4),
-  mcpTimeoutMs: external_exports.number().int().min(1e3).max(12e4).default(6e4),
-  maxOutputChars: external_exports.number().int().min(1e3).max(1e4).default(8e3),
-  mcpAnalyzeCommand: commandAliasSchema.default("analyze"),
-  mcpDoctorCommand: commandAliasSchema.default("doctor"),
-  mcpCleanCommand: commandAliasSchema.default("clean"),
-  mcpToolsCommand: commandAliasSchema.default("tools"),
-  providers: external_exports.record(ProviderIdSchema, providerConfigSchema).default({
-    ollama: {
-      id: "ollama",
-      baseUrl: "http://127.0.0.1:11434/v1",
-      model: "llava",
-      enabled: true,
-      remote: false
-    },
-    omlx: {
-      id: "omlx",
-      baseUrl: "http://127.0.0.1:8000/v1",
-      model: "mlx-vlm",
-      enabled: true,
-      remote: false
-    },
-    llama_cpp: {
-      id: "llama_cpp",
-      baseUrl: "http://127.0.0.1:8080/v1",
-      model: "llava",
-      enabled: true,
-      remote: false
-    },
-    remote_openai: {
-      id: "remote_openai",
-      baseUrl: "",
-      model: "",
-      enabled: false,
-      remote: true
-    }
-  })
-}).superRefine((config2, context) => {
-  const aliases = [
-    config2.mcpAnalyzeCommand,
-    config2.mcpDoctorCommand,
-    config2.mcpCleanCommand,
-    config2.mcpToolsCommand
-  ];
-  if (new Set(aliases).size !== aliases.length) {
-    context.addIssue({
-      code: external_exports.ZodIssueCode.custom,
-      message: "Manual MCP command aliases must be unique."
-    });
-  }
-});
-
-// src/config/load-config.ts
-var pluginConfigKey = "claude-vision-bridge@brein-claude-tools";
-function splitCsv(value) {
-  return (configuredValue(value) ?? "").split(",").map((item) => item.trim()).filter((item) => item.length > 0);
-}
-function normalizeProviderOrder(value) {
-  return splitCsv(value).map((item) => item.toLowerCase().replace(/-/g, "_"));
-}
-function boolEnv(value, fallback) {
-  const configured = configuredValue(value);
-  if (configured === void 0) return fallback;
-  return configured === "1" || configured.toLowerCase() === "true";
-}
-function numEnv(value, fallback) {
-  const parsed = Number(configuredValue(value));
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
-}
-function configuredValue(value) {
-  if (value === void 0 || value === "") return void 0;
-  if (typeof value === "number" || typeof value === "boolean") return String(value);
-  if (typeof value !== "string") return void 0;
-  if (/^\$\{[A-Z0-9_]+\}$/.test(value)) return void 0;
-  return value;
-}
-function loadConfig(env = process.env) {
-  const settingsOptions = readClaudeSettingsPluginOptions(env);
-  const providerOrder = normalizeProviderOrder(pluginOption(env, settingsOptions, "provider_order"));
-  const parsedProviderOrder = providerOrder.length > 0 ? providerOrder : void 0;
-  const allowRemoteFallback = boolEnv(pluginOption(env, settingsOptions, "allow_remote_fallback"), false);
-  return PluginConfigSchema.parse({
-    pluginRoot: configuredValue(env.CLAUDE_PLUGIN_ROOT) ?? process.cwd(),
-    pluginDataDir: configuredValue(env.CLAUDE_VISION_PLUGIN_DATA) ?? configuredValue(env.CLAUDE_PLUGIN_DATA) ?? ".vision-data",
-    providerOrder: parsedProviderOrder,
-    allowRemoteFallback,
-    allowHttpUrls: boolEnv(pluginOption(env, settingsOptions, "allow_http_urls"), false),
-    allowPrivateNetworkUrls: boolEnv(pluginOption(env, settingsOptions, "allow_private_network_urls"), false),
-    allowedDirectories: splitCsv(pluginOption(env, settingsOptions, "allowed_directories")),
-    deniedDirectories: splitCsv(pluginOption(env, settingsOptions, "denied_directories")),
-    maxImageBytes: numEnv(pluginOption(env, settingsOptions, "max_image_bytes"), 10485760),
-    hookTimeoutMs: numEnv(pluginOption(env, settingsOptions, "hook_timeout_ms"), 3e4),
-    providerTimeoutMs: numEnv(pluginOption(env, settingsOptions, "provider_timeout_ms"), 2e4),
-    mcpTimeoutMs: numEnv(pluginOption(env, settingsOptions, "mcp_timeout_ms"), 6e4),
-    maxOutputChars: numEnv(pluginOption(env, settingsOptions, "max_output_chars"), 8e3),
-    mcpAnalyzeCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_analyze_command")) ?? "analyze",
-    mcpDoctorCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_doctor_command")) ?? "doctor",
-    mcpCleanCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_clean_command")) ?? "clean",
-    mcpToolsCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_tools_command")) ?? "tools",
-    providers: {
-      ollama: {
-        id: "ollama",
-        baseUrl: configuredValue(pluginOption(env, settingsOptions, "ollama_base_url")) ?? "http://127.0.0.1:11434/v1",
-        model: configuredValue(pluginOption(env, settingsOptions, "ollama_model")) ?? "llava",
-        apiKey: configuredValue(pluginOption(env, settingsOptions, "ollama_api_key")),
-        enabled: true,
-        remote: false
-      },
-      omlx: {
-        id: "omlx",
-        baseUrl: configuredValue(pluginOption(env, settingsOptions, "omlx_base_url")) ?? "http://127.0.0.1:8000/v1",
-        model: configuredValue(pluginOption(env, settingsOptions, "omlx_model")) ?? "mlx-vlm",
-        apiKey: configuredValue(pluginOption(env, settingsOptions, "omlx_api_key")),
-        enabled: true,
-        remote: false
-      },
-      llama_cpp: {
-        id: "llama_cpp",
-        baseUrl: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_base_url")) ?? "http://127.0.0.1:8080/v1",
-        model: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_model")) ?? "llava",
-        apiKey: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_api_key")),
-        enabled: true,
-        remote: false
-      },
-      remote_openai: {
-        id: "remote_openai",
-        baseUrl: configuredValue(pluginOption(env, settingsOptions, "remote_openai_base_url")) ?? "",
-        model: configuredValue(pluginOption(env, settingsOptions, "remote_openai_model")) ?? "",
-        apiKey: configuredValue(pluginOption(env, settingsOptions, "remote_openai_api_key")),
-        enabled: allowRemoteFallback,
-        remote: true
-      }
-    }
-  });
-}
-function pluginOption(env, settingsOptions, optionName) {
-  const envName = `CLAUDE_PLUGIN_OPTION_${optionName.toUpperCase()}`;
-  return configuredValue(env[envName]) ?? settingsOptions[optionName];
-}
-function readClaudeSettingsPluginOptions(env) {
-  try {
-    const home = configuredValue(env.HOME) ?? homedir();
-    const settings = JSON.parse(readFileSync(join(home, ".claude", "settings.json"), "utf8"));
-    const configs = settings.pluginConfigs ?? {};
-    return configs[pluginConfigKey]?.options ?? findVisionBridgeOptions(configs) ?? {};
-  } catch {
-    return {};
-  }
-}
-function findVisionBridgeOptions(configs) {
-  for (const [key, value] of Object.entries(configs)) {
-    if (key.startsWith("claude-vision-bridge@") && value.options) return value.options;
-  }
-  return void 0;
-}
-
-// node_modules/@modelcontextprotocol/sdk/dist/esm/server/zod-compat.js
-function isZ4Schema(s) {
-  const schema = s;
-  return !!schema._zod;
-}
-function safeParse3(schema, data) {
-  if (isZ4Schema(schema)) {
-    const result2 = safeParse(schema, data);
-    return result2;
-  }
-  const v3Schema = schema;
-  const result = v3Schema.safeParse(data);
-  return result;
-}
-function getObjectShape(schema) {
-  if (!schema)
-    return void 0;
-  let rawShape;
-  if (isZ4Schema(schema)) {
-    const v4Schema = schema;
-    rawShape = v4Schema._zod?.def?.shape;
-  } else {
-    const v3Schema = schema;
-    rawShape = v3Schema.shape;
-  }
-  if (!rawShape)
-    return void 0;
-  if (typeof rawShape === "function") {
-    try {
-      return rawShape();
-    } catch {
-      return void 0;
-    }
-  }
-  return rawShape;
-}
-function getLiteralValue(schema) {
-  if (isZ4Schema(schema)) {
-    const v4Schema = schema;
-    const def2 = v4Schema._zod?.def;
-    if (def2) {
-      if (def2.value !== void 0)
-        return def2.value;
-      if (Array.isArray(def2.values) && def2.values.length > 0) {
-        return def2.values[0];
-      }
-    }
-  }
-  const v3Schema = schema;
-  const def = v3Schema._def;
-  if (def) {
-    if (def.value !== void 0)
-      return def.value;
-    if (Array.isArray(def.values) && def.values.length > 0) {
-      return def.values[0];
-    }
-  }
-  const directValue = schema.value;
-  if (directValue !== void 0)
-    return directValue;
-  return void 0;
-}
-
 // node_modules/@modelcontextprotocol/sdk/dist/esm/types.js
 var LATEST_PROTOCOL_VERSION = "2025-11-25";
 var SUPPORTED_PROTOCOL_VERSIONS = [LATEST_PROTOCOL_VERSION, "2025-06-18", "2025-03-26", "2024-11-05", "2024-10-07"];
@@ -21781,10 +21486,10 @@ var TaskCreationParamsSchema = looseObject({
    */
   pollInterval: number2().optional()
 });
-var TaskMetadataSchema = object({
+var TaskMetadataSchema = object2({
   ttl: number2().optional()
 });
-var RelatedTaskMetadataSchema = object({
+var RelatedTaskMetadataSchema = object2({
   taskId: string2()
 });
 var RequestMetaSchema = looseObject({
@@ -21797,7 +21502,7 @@ var RequestMetaSchema = looseObject({
    */
   [RELATED_TASK_META_KEY]: RelatedTaskMetadataSchema.optional()
 });
-var BaseRequestParamsSchema = object({
+var BaseRequestParamsSchema = object2({
   /**
    * See [General fields: `_meta`](/specification/draft/basic/index#meta) for notes on `_meta` usage.
    */
@@ -21815,18 +21520,18 @@ var TaskAugmentedRequestParamsSchema = BaseRequestParamsSchema.extend({
   task: TaskMetadataSchema.optional()
 });
 var isTaskAugmentedRequestParams = (value) => TaskAugmentedRequestParamsSchema.safeParse(value).success;
-var RequestSchema = object({
+var RequestSchema = object2({
   method: string2(),
   params: BaseRequestParamsSchema.loose().optional()
 });
-var NotificationsParamsSchema = object({
+var NotificationsParamsSchema = object2({
   /**
    * See [MCP specification](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/47339c03c143bb4ec01a26e721a1b8fe66634ebe/docs/specification/draft/basic/index.mdx#general-fields)
    * for notes on _meta usage.
    */
   _meta: RequestMetaSchema.optional()
 });
-var NotificationSchema = object({
+var NotificationSchema = object2({
   method: string2(),
   params: NotificationsParamsSchema.loose().optional()
 });
@@ -21838,18 +21543,18 @@ var ResultSchema = looseObject({
   _meta: RequestMetaSchema.optional()
 });
 var RequestIdSchema = union([string2(), number2().int()]);
-var JSONRPCRequestSchema = object({
+var JSONRPCRequestSchema = object2({
   jsonrpc: literal(JSONRPC_VERSION),
   id: RequestIdSchema,
   ...RequestSchema.shape
 }).strict();
 var isJSONRPCRequest = (value) => JSONRPCRequestSchema.safeParse(value).success;
-var JSONRPCNotificationSchema = object({
+var JSONRPCNotificationSchema = object2({
   jsonrpc: literal(JSONRPC_VERSION),
   ...NotificationSchema.shape
 }).strict();
 var isJSONRPCNotification = (value) => JSONRPCNotificationSchema.safeParse(value).success;
-var JSONRPCResultResponseSchema = object({
+var JSONRPCResultResponseSchema = object2({
   jsonrpc: literal(JSONRPC_VERSION),
   id: RequestIdSchema,
   result: ResultSchema
@@ -21866,10 +21571,10 @@ var ErrorCode;
   ErrorCode2[ErrorCode2["InternalError"] = -32603] = "InternalError";
   ErrorCode2[ErrorCode2["UrlElicitationRequired"] = -32042] = "UrlElicitationRequired";
 })(ErrorCode || (ErrorCode = {}));
-var JSONRPCErrorResponseSchema = object({
+var JSONRPCErrorResponseSchema = object2({
   jsonrpc: literal(JSONRPC_VERSION),
   id: RequestIdSchema.optional(),
-  error: object({
+  error: object2({
     /**
      * The error type that occurred.
      */
@@ -21909,7 +21614,7 @@ var CancelledNotificationSchema = NotificationSchema.extend({
   method: literal("notifications/cancelled"),
   params: CancelledNotificationParamsSchema
 });
-var IconSchema = object({
+var IconSchema = object2({
   /**
    * URL or data URI for the icon.
    */
@@ -21934,7 +21639,7 @@ var IconSchema = object({
    */
   theme: _enum2(["light", "dark"]).optional()
 });
-var IconsSchema = object({
+var IconsSchema = object2({
   /**
    * Optional set of sized icons that the client can display in a user interface.
    *
@@ -21948,7 +21653,7 @@ var IconsSchema = object({
    */
   icons: array(IconSchema).optional()
 });
-var BaseMetadataSchema = object({
+var BaseMetadataSchema = object2({
   /** Intended for programmatic or logical use, but used as a display name in past specs or fallback */
   name: string2(),
   /**
@@ -21978,7 +21683,7 @@ var ImplementationSchema = BaseMetadataSchema.extend({
    */
   description: string2().optional()
 });
-var FormElicitationCapabilitySchema = intersection(object({
+var FormElicitationCapabilitySchema = intersection(object2({
   applyDefaults: boolean2().optional()
 }), record(string2(), unknown()));
 var ElicitationCapabilitySchema = preprocess((value) => {
@@ -21988,7 +21693,7 @@ var ElicitationCapabilitySchema = preprocess((value) => {
     }
   }
   return value;
-}, intersection(object({
+}, intersection(object2({
   form: FormElicitationCapabilitySchema.optional(),
   url: AssertObjectSchema.optional()
 }), record(string2(), unknown()).optional()));
@@ -22040,7 +21745,7 @@ var ServerTasksCapabilitySchema = looseObject({
     }).optional()
   }).optional()
 });
-var ClientCapabilitiesSchema = object({
+var ClientCapabilitiesSchema = object2({
   /**
    * Experimental, non-standard capabilities that the client supports.
    */
@@ -22048,7 +21753,7 @@ var ClientCapabilitiesSchema = object({
   /**
    * Present if the client supports sampling from an LLM.
    */
-  sampling: object({
+  sampling: object2({
     /**
      * Present if the client supports context inclusion via includeContext parameter.
      * If not declared, servers SHOULD only use `includeContext: "none"` (or omit it).
@@ -22066,7 +21771,7 @@ var ClientCapabilitiesSchema = object({
   /**
    * Present if the client supports listing roots.
    */
-  roots: object({
+  roots: object2({
     /**
      * Whether the client supports issuing notifications for changes to the roots list.
      */
@@ -22093,7 +21798,7 @@ var InitializeRequestSchema = RequestSchema.extend({
   method: literal("initialize"),
   params: InitializeRequestParamsSchema
 });
-var ServerCapabilitiesSchema = object({
+var ServerCapabilitiesSchema = object2({
   /**
    * Experimental, non-standard capabilities that the server supports.
    */
@@ -22109,7 +21814,7 @@ var ServerCapabilitiesSchema = object({
   /**
    * Present if the server offers any prompt templates.
    */
-  prompts: object({
+  prompts: object2({
     /**
      * Whether this server supports issuing notifications for changes to the prompt list.
      */
@@ -22118,7 +21823,7 @@ var ServerCapabilitiesSchema = object({
   /**
    * Present if the server offers any resources to read.
    */
-  resources: object({
+  resources: object2({
     /**
      * Whether this server supports clients subscribing to resource updates.
      */
@@ -22131,7 +21836,7 @@ var ServerCapabilitiesSchema = object({
   /**
    * Present if the server offers any tools to call.
    */
-  tools: object({
+  tools: object2({
     /**
      * Whether this server supports issuing notifications for changes to the tool list.
      */
@@ -22168,7 +21873,7 @@ var PingRequestSchema = RequestSchema.extend({
   method: literal("ping"),
   params: BaseRequestParamsSchema.optional()
 });
-var ProgressSchema = object({
+var ProgressSchema = object2({
   /**
    * The progress thus far. This should increase every time progress is made, even if the total is unknown.
    */
@@ -22182,7 +21887,7 @@ var ProgressSchema = object({
    */
   message: optional(string2())
 });
-var ProgressNotificationParamsSchema = object({
+var ProgressNotificationParamsSchema = object2({
   ...NotificationsParamsSchema.shape,
   ...ProgressSchema.shape,
   /**
@@ -22212,7 +21917,7 @@ var PaginatedResultSchema = ResultSchema.extend({
   nextCursor: CursorSchema.optional()
 });
 var TaskStatusSchema = _enum2(["working", "input_required", "completed", "failed", "cancelled"]);
-var TaskSchema = object({
+var TaskSchema = object2({
   taskId: string2(),
   status: TaskStatusSchema,
   /**
@@ -22269,7 +21974,7 @@ var CancelTaskRequestSchema = RequestSchema.extend({
   })
 });
 var CancelTaskResultSchema = ResultSchema.merge(TaskSchema);
-var ResourceContentsSchema = object({
+var ResourceContentsSchema = object2({
   /**
    * The URI of this resource.
    */
@@ -22305,7 +22010,7 @@ var BlobResourceContentsSchema = ResourceContentsSchema.extend({
   blob: Base64Schema
 });
 var RoleSchema = _enum2(["user", "assistant"]);
-var AnnotationsSchema = object({
+var AnnotationsSchema = object2({
   /**
    * Intended audience(s) for the resource.
    */
@@ -22319,7 +22024,7 @@ var AnnotationsSchema = object({
    */
   lastModified: iso_exports.datetime({ offset: true }).optional()
 });
-var ResourceSchema = object({
+var ResourceSchema = object2({
   ...BaseMetadataSchema.shape,
   ...IconsSchema.shape,
   /**
@@ -22352,7 +22057,7 @@ var ResourceSchema = object({
    */
   _meta: optional(looseObject({}))
 });
-var ResourceTemplateSchema = object({
+var ResourceTemplateSchema = object2({
   ...BaseMetadataSchema.shape,
   ...IconsSchema.shape,
   /**
@@ -22431,7 +22136,7 @@ var ResourceUpdatedNotificationSchema = NotificationSchema.extend({
   method: literal("notifications/resources/updated"),
   params: ResourceUpdatedNotificationParamsSchema
 });
-var PromptArgumentSchema = object({
+var PromptArgumentSchema = object2({
   /**
    * The name of the argument.
    */
@@ -22445,7 +22150,7 @@ var PromptArgumentSchema = object({
    */
   required: optional(boolean2())
 });
-var PromptSchema = object({
+var PromptSchema = object2({
   ...BaseMetadataSchema.shape,
   ...IconsSchema.shape,
   /**
@@ -22482,7 +22187,7 @@ var GetPromptRequestSchema = RequestSchema.extend({
   method: literal("prompts/get"),
   params: GetPromptRequestParamsSchema
 });
-var TextContentSchema = object({
+var TextContentSchema = object2({
   type: literal("text"),
   /**
    * The text content of the message.
@@ -22498,7 +22203,7 @@ var TextContentSchema = object({
    */
   _meta: record(string2(), unknown()).optional()
 });
-var ImageContentSchema = object({
+var ImageContentSchema = object2({
   type: literal("image"),
   /**
    * The base64-encoded image data.
@@ -22518,7 +22223,7 @@ var ImageContentSchema = object({
    */
   _meta: record(string2(), unknown()).optional()
 });
-var AudioContentSchema = object({
+var AudioContentSchema = object2({
   type: literal("audio"),
   /**
    * The base64-encoded audio data.
@@ -22538,7 +22243,7 @@ var AudioContentSchema = object({
    */
   _meta: record(string2(), unknown()).optional()
 });
-var ToolUseContentSchema = object({
+var ToolUseContentSchema = object2({
   type: literal("tool_use"),
   /**
    * The name of the tool to invoke.
@@ -22561,7 +22266,7 @@ var ToolUseContentSchema = object({
    */
   _meta: record(string2(), unknown()).optional()
 });
-var EmbeddedResourceSchema = object({
+var EmbeddedResourceSchema = object2({
   type: literal("resource"),
   resource: union([TextResourceContentsSchema, BlobResourceContentsSchema]),
   /**
@@ -22584,7 +22289,7 @@ var ContentBlockSchema = union([
   ResourceLinkSchema,
   EmbeddedResourceSchema
 ]);
-var PromptMessageSchema = object({
+var PromptMessageSchema = object2({
   role: RoleSchema,
   content: ContentBlockSchema
 });
@@ -22599,7 +22304,7 @@ var PromptListChangedNotificationSchema = NotificationSchema.extend({
   method: literal("notifications/prompts/list_changed"),
   params: NotificationsParamsSchema.optional()
 });
-var ToolAnnotationsSchema = object({
+var ToolAnnotationsSchema = object2({
   /**
    * A human-readable title for the tool.
    */
@@ -22638,7 +22343,7 @@ var ToolAnnotationsSchema = object({
    */
   openWorldHint: boolean2().optional()
 });
-var ToolExecutionSchema = object({
+var ToolExecutionSchema = object2({
   /**
    * Indicates the tool's preference for task-augmented execution.
    * - "required": Clients MUST invoke the tool as a task
@@ -22649,7 +22354,7 @@ var ToolExecutionSchema = object({
    */
   taskSupport: _enum2(["required", "optional", "forbidden"]).optional()
 });
-var ToolSchema = object({
+var ToolSchema = object2({
   ...BaseMetadataSchema.shape,
   ...IconsSchema.shape,
   /**
@@ -22660,7 +22365,7 @@ var ToolSchema = object({
    * A JSON Schema 2020-12 object defining the expected parameters for the tool.
    * Must have type: 'object' at the root level per MCP spec.
    */
-  inputSchema: object({
+  inputSchema: object2({
     type: literal("object"),
     properties: record(string2(), AssertObjectSchema).optional(),
     required: array(string2()).optional()
@@ -22670,7 +22375,7 @@ var ToolSchema = object({
    * returned in the structuredContent field of a CallToolResult.
    * Must have type: 'object' at the root level per MCP spec.
    */
-  outputSchema: object({
+  outputSchema: object2({
     type: literal("object"),
     properties: record(string2(), AssertObjectSchema).optional(),
     required: array(string2()).optional()
@@ -22746,7 +22451,7 @@ var ToolListChangedNotificationSchema = NotificationSchema.extend({
   method: literal("notifications/tools/list_changed"),
   params: NotificationsParamsSchema.optional()
 });
-var ListChangedOptionsBaseSchema = object({
+var ListChangedOptionsBaseSchema = object2({
   /**
    * If true, the list will be refreshed automatically when a list changed notification is received.
    * The callback will be called with the updated list.
@@ -22795,13 +22500,13 @@ var LoggingMessageNotificationSchema = NotificationSchema.extend({
   method: literal("notifications/message"),
   params: LoggingMessageNotificationParamsSchema
 });
-var ModelHintSchema = object({
+var ModelHintSchema = object2({
   /**
    * A hint for a model name.
    */
   name: string2().optional()
 });
-var ModelPreferencesSchema = object({
+var ModelPreferencesSchema = object2({
   /**
    * Optional hints to use for model selection.
    */
@@ -22819,7 +22524,7 @@ var ModelPreferencesSchema = object({
    */
   intelligencePriority: number2().min(0).max(1).optional()
 });
-var ToolChoiceSchema = object({
+var ToolChoiceSchema = object2({
   /**
    * Controls when tools are used:
    * - "auto": Model decides whether to use tools (default)
@@ -22828,11 +22533,11 @@ var ToolChoiceSchema = object({
    */
   mode: _enum2(["auto", "required", "none"]).optional()
 });
-var ToolResultContentSchema = object({
+var ToolResultContentSchema = object2({
   type: literal("tool_result"),
   toolUseId: string2().describe("The unique identifier for the corresponding tool call."),
   content: array(ContentBlockSchema).default([]),
-  structuredContent: object({}).loose().optional(),
+  structuredContent: object2({}).loose().optional(),
   isError: boolean2().optional(),
   /**
    * See [MCP specification](https://github.com/modelcontextprotocol/modelcontextprotocol/blob/47339c03c143bb4ec01a26e721a1b8fe66634ebe/docs/specification/draft/basic/index.mdx#general-fields)
@@ -22848,7 +22553,7 @@ var SamplingMessageContentBlockSchema = discriminatedUnion("type", [
   ToolUseContentSchema,
   ToolResultContentSchema
 ]);
-var SamplingMessageSchema = object({
+var SamplingMessageSchema = object2({
   role: RoleSchema,
   content: union([SamplingMessageContentBlockSchema, array(SamplingMessageContentBlockSchema)]),
   /**
@@ -22948,13 +22653,13 @@ var CreateMessageResultWithToolsSchema = ResultSchema.extend({
    */
   content: union([SamplingMessageContentBlockSchema, array(SamplingMessageContentBlockSchema)])
 });
-var BooleanSchemaSchema = object({
+var BooleanSchemaSchema = object2({
   type: literal("boolean"),
   title: string2().optional(),
   description: string2().optional(),
   default: boolean2().optional()
 });
-var StringSchemaSchema = object({
+var StringSchemaSchema = object2({
   type: literal("string"),
   title: string2().optional(),
   description: string2().optional(),
@@ -22963,7 +22668,7 @@ var StringSchemaSchema = object({
   format: _enum2(["email", "uri", "date", "date-time"]).optional(),
   default: string2().optional()
 });
-var NumberSchemaSchema = object({
+var NumberSchemaSchema = object2({
   type: _enum2(["number", "integer"]),
   title: string2().optional(),
   description: string2().optional(),
@@ -22971,24 +22676,24 @@ var NumberSchemaSchema = object({
   maximum: number2().optional(),
   default: number2().optional()
 });
-var UntitledSingleSelectEnumSchemaSchema = object({
+var UntitledSingleSelectEnumSchemaSchema = object2({
   type: literal("string"),
   title: string2().optional(),
   description: string2().optional(),
   enum: array(string2()),
   default: string2().optional()
 });
-var TitledSingleSelectEnumSchemaSchema = object({
+var TitledSingleSelectEnumSchemaSchema = object2({
   type: literal("string"),
   title: string2().optional(),
   description: string2().optional(),
-  oneOf: array(object({
+  oneOf: array(object2({
     const: string2(),
     title: string2()
   })),
   default: string2().optional()
 });
-var LegacyTitledEnumSchemaSchema = object({
+var LegacyTitledEnumSchemaSchema = object2({
   type: literal("string"),
   title: string2().optional(),
   description: string2().optional(),
@@ -22997,26 +22702,26 @@ var LegacyTitledEnumSchemaSchema = object({
   default: string2().optional()
 });
 var SingleSelectEnumSchemaSchema = union([UntitledSingleSelectEnumSchemaSchema, TitledSingleSelectEnumSchemaSchema]);
-var UntitledMultiSelectEnumSchemaSchema = object({
+var UntitledMultiSelectEnumSchemaSchema = object2({
   type: literal("array"),
   title: string2().optional(),
   description: string2().optional(),
   minItems: number2().optional(),
   maxItems: number2().optional(),
-  items: object({
+  items: object2({
     type: literal("string"),
     enum: array(string2())
   }),
   default: array(string2()).optional()
 });
-var TitledMultiSelectEnumSchemaSchema = object({
+var TitledMultiSelectEnumSchemaSchema = object2({
   type: literal("array"),
   title: string2().optional(),
   description: string2().optional(),
   minItems: number2().optional(),
   maxItems: number2().optional(),
-  items: object({
-    anyOf: array(object({
+  items: object2({
+    anyOf: array(object2({
       const: string2(),
       title: string2()
     }))
@@ -23041,7 +22746,7 @@ var ElicitRequestFormParamsSchema = TaskAugmentedRequestParamsSchema.extend({
    * A restricted subset of JSON Schema.
    * Only top-level properties are allowed, without nesting.
    */
-  requestedSchema: object({
+  requestedSchema: object2({
     type: literal("object"),
     properties: record(string2(), PrimitiveSchemaDefinitionSchema),
     required: array(string2()).optional()
@@ -23097,14 +22802,14 @@ var ElicitResultSchema = ResultSchema.extend({
    */
   content: preprocess((val) => val === null ? void 0 : val, record(string2(), union([string2(), number2(), boolean2(), array(string2())])).optional())
 });
-var ResourceTemplateReferenceSchema = object({
+var ResourceTemplateReferenceSchema = object2({
   type: literal("ref/resource"),
   /**
    * The URI or URI template of the resource.
    */
   uri: string2()
 });
-var PromptReferenceSchema = object({
+var PromptReferenceSchema = object2({
   type: literal("ref/prompt"),
   /**
    * The name of the prompt or prompt template
@@ -23116,7 +22821,7 @@ var CompleteRequestParamsSchema = BaseRequestParamsSchema.extend({
   /**
    * The argument's information
    */
-  argument: object({
+  argument: object2({
     /**
      * The name of the argument
      */
@@ -23126,7 +22831,7 @@ var CompleteRequestParamsSchema = BaseRequestParamsSchema.extend({
      */
     value: string2()
   }),
-  context: object({
+  context: object2({
     /**
      * Previously-resolved variables in a URI template or prompt.
      */
@@ -23153,7 +22858,7 @@ var CompleteResultSchema = ResultSchema.extend({
     hasMore: optional(boolean2())
   })
 });
-var RootSchema = object({
+var RootSchema = object2({
   /**
    * The URI identifying the root. This *must* start with file:// for now.
    */
@@ -23304,7 +23009,7 @@ function getMethodLiteral(schema) {
   return value;
 }
 function parseWithCompat(schema, data) {
-  const result = safeParse3(schema, data);
+  const result = safeParse2(schema, data);
   if (!result.success) {
     throw result.error;
   }
@@ -23902,7 +23607,7 @@ var Protocol = class {
           return reject(response);
         }
         try {
-          const parseResult = safeParse3(resultSchema, response.result);
+          const parseResult = safeParse2(resultSchema, response.result);
           if (!parseResult.success) {
             reject(parseResult.error);
           } else {
@@ -24333,6 +24038,768 @@ var AjvJsonSchemaValidator = class {
   }
 };
 
+// node_modules/@modelcontextprotocol/sdk/dist/esm/experimental/tasks/client.js
+var ExperimentalClientTasks = class {
+  constructor(_client) {
+    this._client = _client;
+  }
+  /**
+   * Calls a tool and returns an AsyncGenerator that yields response messages.
+   * The generator is guaranteed to end with either a 'result' or 'error' message.
+   *
+   * This method provides streaming access to tool execution, allowing you to
+   * observe intermediate task status updates for long-running tool calls.
+   * Automatically validates structured output if the tool has an outputSchema.
+   *
+   * @example
+   * ```typescript
+   * const stream = client.experimental.tasks.callToolStream({ name: 'myTool', arguments: {} });
+   * for await (const message of stream) {
+   *   switch (message.type) {
+   *     case 'taskCreated':
+   *       console.log('Tool execution started:', message.task.taskId);
+   *       break;
+   *     case 'taskStatus':
+   *       console.log('Tool status:', message.task.status);
+   *       break;
+   *     case 'result':
+   *       console.log('Tool result:', message.result);
+   *       break;
+   *     case 'error':
+   *       console.error('Tool error:', message.error);
+   *       break;
+   *   }
+   * }
+   * ```
+   *
+   * @param params - Tool call parameters (name and arguments)
+   * @param resultSchema - Zod schema for validating the result (defaults to CallToolResultSchema)
+   * @param options - Optional request options (timeout, signal, task creation params, etc.)
+   * @returns AsyncGenerator that yields ResponseMessage objects
+   *
+   * @experimental
+   */
+  async *callToolStream(params, resultSchema = CallToolResultSchema, options) {
+    const clientInternal = this._client;
+    const optionsWithTask = {
+      ...options,
+      // We check if the tool is known to be a task during auto-configuration, but assume
+      // the caller knows what they're doing if they pass this explicitly
+      task: options?.task ?? (clientInternal.isToolTask(params.name) ? {} : void 0)
+    };
+    const stream = clientInternal.requestStream({ method: "tools/call", params }, resultSchema, optionsWithTask);
+    const validator = clientInternal.getToolOutputValidator(params.name);
+    for await (const message of stream) {
+      if (message.type === "result" && validator) {
+        const result = message.result;
+        if (!result.structuredContent && !result.isError) {
+          yield {
+            type: "error",
+            error: new McpError(ErrorCode.InvalidRequest, `Tool ${params.name} has an output schema but did not return structured content`)
+          };
+          return;
+        }
+        if (result.structuredContent) {
+          try {
+            const validationResult = validator(result.structuredContent);
+            if (!validationResult.valid) {
+              yield {
+                type: "error",
+                error: new McpError(ErrorCode.InvalidParams, `Structured content does not match the tool's output schema: ${validationResult.errorMessage}`)
+              };
+              return;
+            }
+          } catch (error51) {
+            if (error51 instanceof McpError) {
+              yield { type: "error", error: error51 };
+              return;
+            }
+            yield {
+              type: "error",
+              error: new McpError(ErrorCode.InvalidParams, `Failed to validate structured content: ${error51 instanceof Error ? error51.message : String(error51)}`)
+            };
+            return;
+          }
+        }
+      }
+      yield message;
+    }
+  }
+  /**
+   * Gets the current status of a task.
+   *
+   * @param taskId - The task identifier
+   * @param options - Optional request options
+   * @returns The task status
+   *
+   * @experimental
+   */
+  async getTask(taskId, options) {
+    return this._client.getTask({ taskId }, options);
+  }
+  /**
+   * Retrieves the result of a completed task.
+   *
+   * @param taskId - The task identifier
+   * @param resultSchema - Zod schema for validating the result
+   * @param options - Optional request options
+   * @returns The task result
+   *
+   * @experimental
+   */
+  async getTaskResult(taskId, resultSchema, options) {
+    return this._client.getTaskResult({ taskId }, resultSchema, options);
+  }
+  /**
+   * Lists tasks with optional pagination.
+   *
+   * @param cursor - Optional pagination cursor
+   * @param options - Optional request options
+   * @returns List of tasks with optional next cursor
+   *
+   * @experimental
+   */
+  async listTasks(cursor, options) {
+    return this._client.listTasks(cursor ? { cursor } : void 0, options);
+  }
+  /**
+   * Cancels a running task.
+   *
+   * @param taskId - The task identifier
+   * @param options - Optional request options
+   *
+   * @experimental
+   */
+  async cancelTask(taskId, options) {
+    return this._client.cancelTask({ taskId }, options);
+  }
+  /**
+   * Sends a request and returns an AsyncGenerator that yields response messages.
+   * The generator is guaranteed to end with either a 'result' or 'error' message.
+   *
+   * This method provides streaming access to request processing, allowing you to
+   * observe intermediate task status updates for task-augmented requests.
+   *
+   * @param request - The request to send
+   * @param resultSchema - Zod schema for validating the result
+   * @param options - Optional request options (timeout, signal, task creation params, etc.)
+   * @returns AsyncGenerator that yields ResponseMessage objects
+   *
+   * @experimental
+   */
+  requestStream(request, resultSchema, options) {
+    return this._client.requestStream(request, resultSchema, options);
+  }
+};
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/experimental/tasks/helpers.js
+function assertToolsCallTaskCapability(requests, method, entityName) {
+  if (!requests) {
+    throw new Error(`${entityName} does not support task creation (required for ${method})`);
+  }
+  switch (method) {
+    case "tools/call":
+      if (!requests.tools?.call) {
+        throw new Error(`${entityName} does not support task creation for tools/call (required for ${method})`);
+      }
+      break;
+    default:
+      break;
+  }
+}
+function assertClientRequestTaskCapability(requests, method, entityName) {
+  if (!requests) {
+    throw new Error(`${entityName} does not support task creation (required for ${method})`);
+  }
+  switch (method) {
+    case "sampling/createMessage":
+      if (!requests.sampling?.createMessage) {
+        throw new Error(`${entityName} does not support task creation for sampling/createMessage (required for ${method})`);
+      }
+      break;
+    case "elicitation/create":
+      if (!requests.elicitation?.create) {
+        throw new Error(`${entityName} does not support task creation for elicitation/create (required for ${method})`);
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/client/index.js
+function applyElicitationDefaults(schema, data) {
+  if (!schema || data === null || typeof data !== "object")
+    return;
+  if (schema.type === "object" && schema.properties && typeof schema.properties === "object") {
+    const obj = data;
+    const props = schema.properties;
+    for (const key of Object.keys(props)) {
+      const propSchema = props[key];
+      if (obj[key] === void 0 && Object.prototype.hasOwnProperty.call(propSchema, "default")) {
+        obj[key] = propSchema.default;
+      }
+      if (obj[key] !== void 0) {
+        applyElicitationDefaults(propSchema, obj[key]);
+      }
+    }
+  }
+  if (Array.isArray(schema.anyOf)) {
+    for (const sub of schema.anyOf) {
+      if (typeof sub !== "boolean") {
+        applyElicitationDefaults(sub, data);
+      }
+    }
+  }
+  if (Array.isArray(schema.oneOf)) {
+    for (const sub of schema.oneOf) {
+      if (typeof sub !== "boolean") {
+        applyElicitationDefaults(sub, data);
+      }
+    }
+  }
+}
+function getSupportedElicitationModes(capabilities) {
+  if (!capabilities) {
+    return { supportsFormMode: false, supportsUrlMode: false };
+  }
+  const hasFormCapability = capabilities.form !== void 0;
+  const hasUrlCapability = capabilities.url !== void 0;
+  const supportsFormMode = hasFormCapability || !hasFormCapability && !hasUrlCapability;
+  const supportsUrlMode = hasUrlCapability;
+  return { supportsFormMode, supportsUrlMode };
+}
+var Client = class extends Protocol {
+  /**
+   * Initializes this client with the given name and version information.
+   */
+  constructor(_clientInfo, options) {
+    super(options);
+    this._clientInfo = _clientInfo;
+    this._cachedToolOutputValidators = /* @__PURE__ */ new Map();
+    this._cachedKnownTaskTools = /* @__PURE__ */ new Set();
+    this._cachedRequiredTaskTools = /* @__PURE__ */ new Set();
+    this._listChangedDebounceTimers = /* @__PURE__ */ new Map();
+    this._capabilities = options?.capabilities ?? {};
+    this._jsonSchemaValidator = options?.jsonSchemaValidator ?? new AjvJsonSchemaValidator();
+    if (options?.listChanged) {
+      this._pendingListChangedConfig = options.listChanged;
+    }
+  }
+  /**
+   * Set up handlers for list changed notifications based on config and server capabilities.
+   * This should only be called after initialization when server capabilities are known.
+   * Handlers are silently skipped if the server doesn't advertise the corresponding listChanged capability.
+   * @internal
+   */
+  _setupListChangedHandlers(config2) {
+    if (config2.tools && this._serverCapabilities?.tools?.listChanged) {
+      this._setupListChangedHandler("tools", ToolListChangedNotificationSchema, config2.tools, async () => {
+        const result = await this.listTools();
+        return result.tools;
+      });
+    }
+    if (config2.prompts && this._serverCapabilities?.prompts?.listChanged) {
+      this._setupListChangedHandler("prompts", PromptListChangedNotificationSchema, config2.prompts, async () => {
+        const result = await this.listPrompts();
+        return result.prompts;
+      });
+    }
+    if (config2.resources && this._serverCapabilities?.resources?.listChanged) {
+      this._setupListChangedHandler("resources", ResourceListChangedNotificationSchema, config2.resources, async () => {
+        const result = await this.listResources();
+        return result.resources;
+      });
+    }
+  }
+  /**
+   * Access experimental features.
+   *
+   * WARNING: These APIs are experimental and may change without notice.
+   *
+   * @experimental
+   */
+  get experimental() {
+    if (!this._experimental) {
+      this._experimental = {
+        tasks: new ExperimentalClientTasks(this)
+      };
+    }
+    return this._experimental;
+  }
+  /**
+   * Registers new capabilities. This can only be called before connecting to a transport.
+   *
+   * The new capabilities will be merged with any existing capabilities previously given (e.g., at initialization).
+   */
+  registerCapabilities(capabilities) {
+    if (this.transport) {
+      throw new Error("Cannot register capabilities after connecting to transport");
+    }
+    this._capabilities = mergeCapabilities(this._capabilities, capabilities);
+  }
+  /**
+   * Override request handler registration to enforce client-side validation for elicitation.
+   */
+  setRequestHandler(requestSchema, handler) {
+    const shape = getObjectShape(requestSchema);
+    const methodSchema = shape?.method;
+    if (!methodSchema) {
+      throw new Error("Schema is missing a method literal");
+    }
+    let methodValue;
+    if (isZ4Schema(methodSchema)) {
+      const v4Schema = methodSchema;
+      const v4Def = v4Schema._zod?.def;
+      methodValue = v4Def?.value ?? v4Schema.value;
+    } else {
+      const v3Schema = methodSchema;
+      const legacyDef = v3Schema._def;
+      methodValue = legacyDef?.value ?? v3Schema.value;
+    }
+    if (typeof methodValue !== "string") {
+      throw new Error("Schema method literal must be a string");
+    }
+    const method = methodValue;
+    if (method === "elicitation/create") {
+      const wrappedHandler = async (request, extra) => {
+        const validatedRequest = safeParse2(ElicitRequestSchema, request);
+        if (!validatedRequest.success) {
+          const errorMessage = validatedRequest.error instanceof Error ? validatedRequest.error.message : String(validatedRequest.error);
+          throw new McpError(ErrorCode.InvalidParams, `Invalid elicitation request: ${errorMessage}`);
+        }
+        const { params } = validatedRequest.data;
+        params.mode = params.mode ?? "form";
+        const { supportsFormMode, supportsUrlMode } = getSupportedElicitationModes(this._capabilities.elicitation);
+        if (params.mode === "form" && !supportsFormMode) {
+          throw new McpError(ErrorCode.InvalidParams, "Client does not support form-mode elicitation requests");
+        }
+        if (params.mode === "url" && !supportsUrlMode) {
+          throw new McpError(ErrorCode.InvalidParams, "Client does not support URL-mode elicitation requests");
+        }
+        const result = await Promise.resolve(handler(request, extra));
+        if (params.task) {
+          const taskValidationResult = safeParse2(CreateTaskResultSchema, result);
+          if (!taskValidationResult.success) {
+            const errorMessage = taskValidationResult.error instanceof Error ? taskValidationResult.error.message : String(taskValidationResult.error);
+            throw new McpError(ErrorCode.InvalidParams, `Invalid task creation result: ${errorMessage}`);
+          }
+          return taskValidationResult.data;
+        }
+        const validationResult = safeParse2(ElicitResultSchema, result);
+        if (!validationResult.success) {
+          const errorMessage = validationResult.error instanceof Error ? validationResult.error.message : String(validationResult.error);
+          throw new McpError(ErrorCode.InvalidParams, `Invalid elicitation result: ${errorMessage}`);
+        }
+        const validatedResult = validationResult.data;
+        const requestedSchema = params.mode === "form" ? params.requestedSchema : void 0;
+        if (params.mode === "form" && validatedResult.action === "accept" && validatedResult.content && requestedSchema) {
+          if (this._capabilities.elicitation?.form?.applyDefaults) {
+            try {
+              applyElicitationDefaults(requestedSchema, validatedResult.content);
+            } catch {
+            }
+          }
+        }
+        return validatedResult;
+      };
+      return super.setRequestHandler(requestSchema, wrappedHandler);
+    }
+    if (method === "sampling/createMessage") {
+      const wrappedHandler = async (request, extra) => {
+        const validatedRequest = safeParse2(CreateMessageRequestSchema, request);
+        if (!validatedRequest.success) {
+          const errorMessage = validatedRequest.error instanceof Error ? validatedRequest.error.message : String(validatedRequest.error);
+          throw new McpError(ErrorCode.InvalidParams, `Invalid sampling request: ${errorMessage}`);
+        }
+        const { params } = validatedRequest.data;
+        const result = await Promise.resolve(handler(request, extra));
+        if (params.task) {
+          const taskValidationResult = safeParse2(CreateTaskResultSchema, result);
+          if (!taskValidationResult.success) {
+            const errorMessage = taskValidationResult.error instanceof Error ? taskValidationResult.error.message : String(taskValidationResult.error);
+            throw new McpError(ErrorCode.InvalidParams, `Invalid task creation result: ${errorMessage}`);
+          }
+          return taskValidationResult.data;
+        }
+        const hasTools = params.tools || params.toolChoice;
+        const resultSchema = hasTools ? CreateMessageResultWithToolsSchema : CreateMessageResultSchema;
+        const validationResult = safeParse2(resultSchema, result);
+        if (!validationResult.success) {
+          const errorMessage = validationResult.error instanceof Error ? validationResult.error.message : String(validationResult.error);
+          throw new McpError(ErrorCode.InvalidParams, `Invalid sampling result: ${errorMessage}`);
+        }
+        return validationResult.data;
+      };
+      return super.setRequestHandler(requestSchema, wrappedHandler);
+    }
+    return super.setRequestHandler(requestSchema, handler);
+  }
+  assertCapability(capability, method) {
+    if (!this._serverCapabilities?.[capability]) {
+      throw new Error(`Server does not support ${capability} (required for ${method})`);
+    }
+  }
+  async connect(transport, options) {
+    await super.connect(transport);
+    if (transport.sessionId !== void 0) {
+      return;
+    }
+    try {
+      const result = await this.request({
+        method: "initialize",
+        params: {
+          protocolVersion: LATEST_PROTOCOL_VERSION,
+          capabilities: this._capabilities,
+          clientInfo: this._clientInfo
+        }
+      }, InitializeResultSchema, options);
+      if (result === void 0) {
+        throw new Error(`Server sent invalid initialize result: ${result}`);
+      }
+      if (!SUPPORTED_PROTOCOL_VERSIONS.includes(result.protocolVersion)) {
+        throw new Error(`Server's protocol version is not supported: ${result.protocolVersion}`);
+      }
+      this._serverCapabilities = result.capabilities;
+      this._serverVersion = result.serverInfo;
+      if (transport.setProtocolVersion) {
+        transport.setProtocolVersion(result.protocolVersion);
+      }
+      this._instructions = result.instructions;
+      await this.notification({
+        method: "notifications/initialized"
+      });
+      if (this._pendingListChangedConfig) {
+        this._setupListChangedHandlers(this._pendingListChangedConfig);
+        this._pendingListChangedConfig = void 0;
+      }
+    } catch (error51) {
+      void this.close();
+      throw error51;
+    }
+  }
+  /**
+   * After initialization has completed, this will be populated with the server's reported capabilities.
+   */
+  getServerCapabilities() {
+    return this._serverCapabilities;
+  }
+  /**
+   * After initialization has completed, this will be populated with information about the server's name and version.
+   */
+  getServerVersion() {
+    return this._serverVersion;
+  }
+  /**
+   * After initialization has completed, this may be populated with information about the server's instructions.
+   */
+  getInstructions() {
+    return this._instructions;
+  }
+  assertCapabilityForMethod(method) {
+    switch (method) {
+      case "logging/setLevel":
+        if (!this._serverCapabilities?.logging) {
+          throw new Error(`Server does not support logging (required for ${method})`);
+        }
+        break;
+      case "prompts/get":
+      case "prompts/list":
+        if (!this._serverCapabilities?.prompts) {
+          throw new Error(`Server does not support prompts (required for ${method})`);
+        }
+        break;
+      case "resources/list":
+      case "resources/templates/list":
+      case "resources/read":
+      case "resources/subscribe":
+      case "resources/unsubscribe":
+        if (!this._serverCapabilities?.resources) {
+          throw new Error(`Server does not support resources (required for ${method})`);
+        }
+        if (method === "resources/subscribe" && !this._serverCapabilities.resources.subscribe) {
+          throw new Error(`Server does not support resource subscriptions (required for ${method})`);
+        }
+        break;
+      case "tools/call":
+      case "tools/list":
+        if (!this._serverCapabilities?.tools) {
+          throw new Error(`Server does not support tools (required for ${method})`);
+        }
+        break;
+      case "completion/complete":
+        if (!this._serverCapabilities?.completions) {
+          throw new Error(`Server does not support completions (required for ${method})`);
+        }
+        break;
+      case "initialize":
+        break;
+      case "ping":
+        break;
+    }
+  }
+  assertNotificationCapability(method) {
+    switch (method) {
+      case "notifications/roots/list_changed":
+        if (!this._capabilities.roots?.listChanged) {
+          throw new Error(`Client does not support roots list changed notifications (required for ${method})`);
+        }
+        break;
+      case "notifications/initialized":
+        break;
+      case "notifications/cancelled":
+        break;
+      case "notifications/progress":
+        break;
+    }
+  }
+  assertRequestHandlerCapability(method) {
+    if (!this._capabilities) {
+      return;
+    }
+    switch (method) {
+      case "sampling/createMessage":
+        if (!this._capabilities.sampling) {
+          throw new Error(`Client does not support sampling capability (required for ${method})`);
+        }
+        break;
+      case "elicitation/create":
+        if (!this._capabilities.elicitation) {
+          throw new Error(`Client does not support elicitation capability (required for ${method})`);
+        }
+        break;
+      case "roots/list":
+        if (!this._capabilities.roots) {
+          throw new Error(`Client does not support roots capability (required for ${method})`);
+        }
+        break;
+      case "tasks/get":
+      case "tasks/list":
+      case "tasks/result":
+      case "tasks/cancel":
+        if (!this._capabilities.tasks) {
+          throw new Error(`Client does not support tasks capability (required for ${method})`);
+        }
+        break;
+      case "ping":
+        break;
+    }
+  }
+  assertTaskCapability(method) {
+    assertToolsCallTaskCapability(this._serverCapabilities?.tasks?.requests, method, "Server");
+  }
+  assertTaskHandlerCapability(method) {
+    if (!this._capabilities) {
+      return;
+    }
+    assertClientRequestTaskCapability(this._capabilities.tasks?.requests, method, "Client");
+  }
+  async ping(options) {
+    return this.request({ method: "ping" }, EmptyResultSchema, options);
+  }
+  async complete(params, options) {
+    return this.request({ method: "completion/complete", params }, CompleteResultSchema, options);
+  }
+  async setLoggingLevel(level, options) {
+    return this.request({ method: "logging/setLevel", params: { level } }, EmptyResultSchema, options);
+  }
+  async getPrompt(params, options) {
+    return this.request({ method: "prompts/get", params }, GetPromptResultSchema, options);
+  }
+  async listPrompts(params, options) {
+    return this.request({ method: "prompts/list", params }, ListPromptsResultSchema, options);
+  }
+  async listResources(params, options) {
+    return this.request({ method: "resources/list", params }, ListResourcesResultSchema, options);
+  }
+  async listResourceTemplates(params, options) {
+    return this.request({ method: "resources/templates/list", params }, ListResourceTemplatesResultSchema, options);
+  }
+  async readResource(params, options) {
+    return this.request({ method: "resources/read", params }, ReadResourceResultSchema, options);
+  }
+  async subscribeResource(params, options) {
+    return this.request({ method: "resources/subscribe", params }, EmptyResultSchema, options);
+  }
+  async unsubscribeResource(params, options) {
+    return this.request({ method: "resources/unsubscribe", params }, EmptyResultSchema, options);
+  }
+  /**
+   * Calls a tool and waits for the result. Automatically validates structured output if the tool has an outputSchema.
+   *
+   * For task-based execution with streaming behavior, use client.experimental.tasks.callToolStream() instead.
+   */
+  async callTool(params, resultSchema = CallToolResultSchema, options) {
+    if (this.isToolTaskRequired(params.name)) {
+      throw new McpError(ErrorCode.InvalidRequest, `Tool "${params.name}" requires task-based execution. Use client.experimental.tasks.callToolStream() instead.`);
+    }
+    const result = await this.request({ method: "tools/call", params }, resultSchema, options);
+    const validator = this.getToolOutputValidator(params.name);
+    if (validator) {
+      if (!result.structuredContent && !result.isError) {
+        throw new McpError(ErrorCode.InvalidRequest, `Tool ${params.name} has an output schema but did not return structured content`);
+      }
+      if (result.structuredContent) {
+        try {
+          const validationResult = validator(result.structuredContent);
+          if (!validationResult.valid) {
+            throw new McpError(ErrorCode.InvalidParams, `Structured content does not match the tool's output schema: ${validationResult.errorMessage}`);
+          }
+        } catch (error51) {
+          if (error51 instanceof McpError) {
+            throw error51;
+          }
+          throw new McpError(ErrorCode.InvalidParams, `Failed to validate structured content: ${error51 instanceof Error ? error51.message : String(error51)}`);
+        }
+      }
+    }
+    return result;
+  }
+  isToolTask(toolName) {
+    if (!this._serverCapabilities?.tasks?.requests?.tools?.call) {
+      return false;
+    }
+    return this._cachedKnownTaskTools.has(toolName);
+  }
+  /**
+   * Check if a tool requires task-based execution.
+   * Unlike isToolTask which includes 'optional' tools, this only checks for 'required'.
+   */
+  isToolTaskRequired(toolName) {
+    return this._cachedRequiredTaskTools.has(toolName);
+  }
+  /**
+   * Cache validators for tool output schemas.
+   * Called after listTools() to pre-compile validators for better performance.
+   */
+  cacheToolMetadata(tools) {
+    this._cachedToolOutputValidators.clear();
+    this._cachedKnownTaskTools.clear();
+    this._cachedRequiredTaskTools.clear();
+    for (const tool of tools) {
+      if (tool.outputSchema) {
+        const toolValidator = this._jsonSchemaValidator.getValidator(tool.outputSchema);
+        this._cachedToolOutputValidators.set(tool.name, toolValidator);
+      }
+      const taskSupport = tool.execution?.taskSupport;
+      if (taskSupport === "required" || taskSupport === "optional") {
+        this._cachedKnownTaskTools.add(tool.name);
+      }
+      if (taskSupport === "required") {
+        this._cachedRequiredTaskTools.add(tool.name);
+      }
+    }
+  }
+  /**
+   * Get cached validator for a tool
+   */
+  getToolOutputValidator(toolName) {
+    return this._cachedToolOutputValidators.get(toolName);
+  }
+  async listTools(params, options) {
+    const result = await this.request({ method: "tools/list", params }, ListToolsResultSchema, options);
+    this.cacheToolMetadata(result.tools);
+    return result;
+  }
+  /**
+   * Set up a single list changed handler.
+   * @internal
+   */
+  _setupListChangedHandler(listType, notificationSchema, options, fetcher) {
+    const parseResult = ListChangedOptionsBaseSchema.safeParse(options);
+    if (!parseResult.success) {
+      throw new Error(`Invalid ${listType} listChanged options: ${parseResult.error.message}`);
+    }
+    if (typeof options.onChanged !== "function") {
+      throw new Error(`Invalid ${listType} listChanged options: onChanged must be a function`);
+    }
+    const { autoRefresh, debounceMs } = parseResult.data;
+    const { onChanged } = options;
+    const refresh = async () => {
+      if (!autoRefresh) {
+        onChanged(null, null);
+        return;
+      }
+      try {
+        const items = await fetcher();
+        onChanged(null, items);
+      } catch (e) {
+        const error51 = e instanceof Error ? e : new Error(String(e));
+        onChanged(error51, null);
+      }
+    };
+    const handler = () => {
+      if (debounceMs) {
+        const existingTimer = this._listChangedDebounceTimers.get(listType);
+        if (existingTimer) {
+          clearTimeout(existingTimer);
+        }
+        const timer = setTimeout(refresh, debounceMs);
+        this._listChangedDebounceTimers.set(listType, timer);
+      } else {
+        refresh();
+      }
+    };
+    this.setNotificationHandler(notificationSchema, handler);
+  }
+  async sendRootsListChanged() {
+    return this.notification({ method: "notifications/roots/list_changed" });
+  }
+};
+
+// node_modules/@modelcontextprotocol/sdk/dist/esm/inMemory.js
+var InMemoryTransport = class _InMemoryTransport {
+  constructor() {
+    this._messageQueue = [];
+  }
+  /**
+   * Creates a pair of linked in-memory transports that can communicate with each other. One should be passed to a Client and one to a Server.
+   */
+  static createLinkedPair() {
+    const clientTransport = new _InMemoryTransport();
+    const serverTransport = new _InMemoryTransport();
+    clientTransport._otherTransport = serverTransport;
+    serverTransport._otherTransport = clientTransport;
+    return [clientTransport, serverTransport];
+  }
+  async start() {
+    while (this._messageQueue.length > 0) {
+      const queuedMessage = this._messageQueue.shift();
+      this.onmessage?.(queuedMessage.message, queuedMessage.extra);
+    }
+  }
+  async close() {
+    const other = this._otherTransport;
+    this._otherTransport = void 0;
+    await other?.close();
+    this.onclose?.();
+  }
+  /**
+   * Sends a message with optional auth info.
+   * This is useful for testing authentication scenarios.
+   */
+  async send(message, options) {
+    if (!this._otherTransport) {
+      throw new Error("Not connected");
+    }
+    if (this._otherTransport.onmessage) {
+      this._otherTransport.onmessage(message, { authInfo: options?.authInfo });
+    } else {
+      this._otherTransport._messageQueue.push({ message, extra: { authInfo: options?.authInfo } });
+    }
+  }
+};
+
+// src/core/infer-vision-mode.ts
+function inferVisionMode(prompt) {
+  if (/\bocr\b/i.test(prompt)) return "ocr";
+  if (/(提取|识别|读取|转写).{0,12}(文字|文本)/.test(prompt)) return "ocr";
+  if (/(看得见|可见).{0,8}(文字|文本)/.test(prompt)) return "ocr";
+  if (/\b(extract|read|transcribe)\b.{0,24}\b(visible\s+)?text\b/i.test(prompt)) return "ocr";
+  if (/\bvisible\s+text\b/i.test(prompt)) return "ocr";
+  return "general";
+}
+
 // node_modules/@modelcontextprotocol/sdk/dist/esm/experimental/tasks/server.js
 var ExperimentalServerTasks = class {
   constructor(_server) {
@@ -24546,41 +25013,6 @@ var ExperimentalServerTasks = class {
   }
 };
 
-// node_modules/@modelcontextprotocol/sdk/dist/esm/experimental/tasks/helpers.js
-function assertToolsCallTaskCapability(requests, method, entityName) {
-  if (!requests) {
-    throw new Error(`${entityName} does not support task creation (required for ${method})`);
-  }
-  switch (method) {
-    case "tools/call":
-      if (!requests.tools?.call) {
-        throw new Error(`${entityName} does not support task creation for tools/call (required for ${method})`);
-      }
-      break;
-    default:
-      break;
-  }
-}
-function assertClientRequestTaskCapability(requests, method, entityName) {
-  if (!requests) {
-    throw new Error(`${entityName} does not support task creation (required for ${method})`);
-  }
-  switch (method) {
-    case "sampling/createMessage":
-      if (!requests.sampling?.createMessage) {
-        throw new Error(`${entityName} does not support task creation for sampling/createMessage (required for ${method})`);
-      }
-      break;
-    case "elicitation/create":
-      if (!requests.elicitation?.create) {
-        throw new Error(`${entityName} does not support task creation for elicitation/create (required for ${method})`);
-      }
-      break;
-    default:
-      break;
-  }
-}
-
 // node_modules/@modelcontextprotocol/sdk/dist/esm/server/index.js
 var Server = class extends Protocol {
   /**
@@ -24663,7 +25095,7 @@ var Server = class extends Protocol {
     const method = methodValue;
     if (method === "tools/call") {
       const wrappedHandler = async (request, extra) => {
-        const validatedRequest = safeParse3(CallToolRequestSchema, request);
+        const validatedRequest = safeParse2(CallToolRequestSchema, request);
         if (!validatedRequest.success) {
           const errorMessage = validatedRequest.error instanceof Error ? validatedRequest.error.message : String(validatedRequest.error);
           throw new McpError(ErrorCode.InvalidParams, `Invalid tools/call request: ${errorMessage}`);
@@ -24671,14 +25103,14 @@ var Server = class extends Protocol {
         const { params } = validatedRequest.data;
         const result = await Promise.resolve(handler(request, extra));
         if (params.task) {
-          const taskValidationResult = safeParse3(CreateTaskResultSchema, result);
+          const taskValidationResult = safeParse2(CreateTaskResultSchema, result);
           if (!taskValidationResult.success) {
             const errorMessage = taskValidationResult.error instanceof Error ? taskValidationResult.error.message : String(taskValidationResult.error);
             throw new McpError(ErrorCode.InvalidParams, `Invalid task creation result: ${errorMessage}`);
           }
           return taskValidationResult.data;
         }
-        const validationResult = safeParse3(CallToolResultSchema, result);
+        const validationResult = safeParse2(CallToolResultSchema, result);
         if (!validationResult.success) {
           const errorMessage = validationResult.error instanceof Error ? validationResult.error.message : String(validationResult.error);
           throw new McpError(ErrorCode.InvalidParams, `Invalid tools/call result: ${errorMessage}`);
@@ -25058,13 +25490,203 @@ import {
   existsSync,
   mkdirSync,
   readdirSync,
-  readFileSync as readFileSync2,
+  readFileSync,
   renameSync,
   rmSync,
   statSync,
   writeFileSync
 } from "node:fs";
-import { dirname, join as join2 } from "node:path";
+import { dirname, join } from "node:path";
+
+// src/core/schema.ts
+var ProviderIdSchema = external_exports.enum(["ollama", "omlx", "llama_cpp", "remote_openai"]);
+var VisionModeSchema = external_exports.enum(["general", "ui", "ocr", "error", "chart", "document-screenshot"]);
+var ImageSourceSchema = external_exports.discriminatedUnion("type", [
+  external_exports.object({ type: external_exports.literal("path"), path: external_exports.string().min(1), origin: external_exports.enum(["hook", "mcp"]) }),
+  external_exports.object({ type: external_exports.literal("url"), url: external_exports.string().url(), origin: external_exports.enum(["hook", "mcp"]) }),
+  external_exports.object({ type: external_exports.literal("clipboard"), origin: external_exports.enum(["hook", "mcp"]) }),
+  external_exports.object({
+    type: external_exports.literal("base64"),
+    mime: external_exports.string().min(1),
+    data: external_exports.string().min(1),
+    origin: external_exports.literal("mcp")
+  })
+]);
+var AnalyzeImageRequestSchema = external_exports.object({
+  source: ImageSourceSchema,
+  mode: VisionModeSchema.default("general"),
+  prompt: external_exports.string().default("Describe the image for a coding agent."),
+  preferredProvider: ProviderIdSchema.optional(),
+  preferredModel: external_exports.string().min(1).optional(),
+  timeoutMs: external_exports.number().int().positive().default(3e4),
+  maxOutputChars: external_exports.number().int().positive().max(1e4).default(8e3)
+});
+var VisionStructuredOutputSchema = external_exports.object({
+  schemaVersion: external_exports.literal("vision.v1"),
+  mode: VisionModeSchema,
+  intentSummary: external_exports.string(),
+  observations: external_exports.array(external_exports.string()),
+  ocrText: external_exports.string().optional(),
+  uiStructure: external_exports.object({
+    layout: external_exports.string().optional(),
+    regions: external_exports.array(
+      external_exports.object({
+        name: external_exports.string(),
+        role: external_exports.string(),
+        text: external_exports.string().optional(),
+        bbox: external_exports.tuple([external_exports.number(), external_exports.number(), external_exports.number(), external_exports.number()]).optional()
+      })
+    ).optional(),
+    likelyIssue: external_exports.string().optional()
+  }).optional(),
+  chartSummary: external_exports.object({
+    title: external_exports.string().optional(),
+    axes: external_exports.array(external_exports.string()).optional(),
+    keyFindings: external_exports.array(external_exports.string()).optional()
+  }).optional(),
+  likelyTechnicalCauses: external_exports.array(external_exports.string()),
+  recommendedCodeSearches: external_exports.array(external_exports.string()),
+  redactions: external_exports.array(external_exports.string()),
+  modelLimitations: external_exports.array(external_exports.string())
+});
+var VisionArtifactSchema = external_exports.object({
+  artifactType: external_exports.literal("success"),
+  schemaVersion: external_exports.literal("vision-artifact.v1"),
+  source: external_exports.object({
+    type: external_exports.enum(["path", "url", "clipboard", "base64"]),
+    originalRef: external_exports.string(),
+    resolvedPath: external_exports.string().optional(),
+    sha256: external_exports.string().regex(/^[a-f0-9]{64}$/),
+    mime: external_exports.string(),
+    bytes: external_exports.number().int().nonnegative()
+  }),
+  provider: external_exports.object({
+    id: ProviderIdSchema,
+    model: external_exports.string(),
+    endpoint: external_exports.string().optional(),
+    fallbackDepth: external_exports.number().int().nonnegative()
+  }),
+  timings: external_exports.object({
+    startedAt: external_exports.string(),
+    completedAt: external_exports.string(),
+    latencyMs: external_exports.number().nonnegative(),
+    cacheHit: external_exports.boolean()
+  }),
+  analysis: VisionStructuredOutputSchema,
+  markdown: external_exports.string()
+});
+var FailureCategorySchema = external_exports.enum([
+  "NO_VALID_IMAGE",
+  "PATH_POLICY_DENIED",
+  "URL_POLICY_DENIED",
+  "CLIPBOARD_UNAVAILABLE",
+  "CLIPBOARD_EMPTY",
+  "INVALID_BASE64",
+  "LOCAL_PROVIDERS_FAILED",
+  "REMOTE_DISABLED",
+  "REMOTE_FAILED",
+  "PROVIDER_TIMEOUT",
+  "MALFORMED_RESPONSE",
+  "INTERNAL_ERROR"
+]);
+var FailureArtifactSchema = external_exports.object({
+  artifactType: external_exports.literal("failure"),
+  schemaVersion: external_exports.literal("vision-failure.v1"),
+  source: external_exports.object({
+    type: external_exports.enum(["path", "url", "clipboard", "base64"]),
+    originalRef: external_exports.string(),
+    resolvedPath: external_exports.string().optional(),
+    sha256: external_exports.string().regex(/^[a-f0-9]{64}$/).optional()
+  }).optional(),
+  failure: external_exports.object({
+    category: FailureCategorySchema,
+    message: external_exports.string(),
+    attemptedProviders: external_exports.array(
+      external_exports.object({
+        id: external_exports.string(),
+        status: external_exports.enum(["skipped", "failed", "timeout", "circuit_open"]),
+        reason: external_exports.string()
+      })
+    ),
+    remoteFallbackAllowed: external_exports.boolean()
+  }),
+  recommendedNextSteps: external_exports.array(external_exports.string()),
+  markdown: external_exports.string()
+});
+var providerOrderDefault = ["ollama", "omlx", "llama_cpp", "remote_openai"];
+var providerConfigSchema = external_exports.object({
+  id: ProviderIdSchema,
+  baseUrl: external_exports.string(),
+  model: external_exports.string(),
+  apiKey: external_exports.string().optional(),
+  enabled: external_exports.boolean(),
+  remote: external_exports.boolean()
+});
+var commandAliasSchema = external_exports.string().regex(/^[a-z0-9][a-z0-9_-]*$/i);
+var PluginConfigSchema = external_exports.object({
+  pluginRoot: external_exports.string().default(process.cwd()),
+  pluginDataDir: external_exports.string().default(".vision-data"),
+  providerOrder: external_exports.array(ProviderIdSchema).default([...providerOrderDefault]),
+  allowRemoteFallback: external_exports.boolean().default(false),
+  allowHttpUrls: external_exports.boolean().default(false),
+  allowPrivateNetworkUrls: external_exports.boolean().default(false),
+  allowedDirectories: external_exports.array(external_exports.string()).default([]),
+  deniedDirectories: external_exports.array(external_exports.string()).default([]),
+  maxImageBytes: external_exports.number().int().min(1024).max(52428800).default(10485760),
+  hookTimeoutMs: external_exports.number().int().min(1e3).max(3e4).default(3e4),
+  providerTimeoutMs: external_exports.number().int().min(1e3).max(6e4).default(2e4),
+  mcpTimeoutMs: external_exports.number().int().min(1e3).max(12e4).default(6e4),
+  maxOutputChars: external_exports.number().int().min(1e3).max(1e4).default(8e3),
+  mcpAnalyzeCommand: commandAliasSchema.default("analyze"),
+  mcpDoctorCommand: commandAliasSchema.default("doctor"),
+  mcpCleanCommand: commandAliasSchema.default("clean"),
+  mcpToolsCommand: commandAliasSchema.default("tools"),
+  providers: external_exports.record(ProviderIdSchema, providerConfigSchema).default({
+    ollama: {
+      id: "ollama",
+      baseUrl: "http://127.0.0.1:11434/v1",
+      model: "llava",
+      enabled: true,
+      remote: false
+    },
+    omlx: {
+      id: "omlx",
+      baseUrl: "http://127.0.0.1:8000/v1",
+      model: "mlx-vlm",
+      enabled: true,
+      remote: false
+    },
+    llama_cpp: {
+      id: "llama_cpp",
+      baseUrl: "http://127.0.0.1:8080/v1",
+      model: "llava",
+      enabled: true,
+      remote: false
+    },
+    remote_openai: {
+      id: "remote_openai",
+      baseUrl: "",
+      model: "",
+      enabled: false,
+      remote: true
+    }
+  })
+}).superRefine((config2, context) => {
+  const aliases = [
+    config2.mcpAnalyzeCommand,
+    config2.mcpDoctorCommand,
+    config2.mcpCleanCommand,
+    config2.mcpToolsCommand
+  ];
+  if (new Set(aliases).size !== aliases.length) {
+    context.addIssue({
+      code: external_exports.ZodIssueCode.custom,
+      message: "Manual MCP command aliases must be unique."
+    });
+  }
+});
+
+// src/cache/cache-manager.ts
 var CacheManager = class {
   constructor(options) {
     this.options = options;
@@ -25072,38 +25694,38 @@ var CacheManager = class {
   options;
   ensureDirs() {
     for (const dir of ["success", "failure", "locks"]) {
-      mkdirSync(join2(this.options.dataDir, "cache", dir), { recursive: true });
+      mkdirSync(join(this.options.dataDir, "cache", dir), { recursive: true });
     }
   }
   readSuccess(key) {
-    return readArtifact(join2(this.options.dataDir, "cache", "success", `${key}.json`), VisionArtifactSchema);
+    return readArtifact(join(this.options.dataDir, "cache", "success", `${key}.json`), VisionArtifactSchema);
   }
   writeSuccess(key, artifact) {
-    writeJsonAtomic(join2(this.options.dataDir, "cache", "success", `${key}.json`), artifact);
-    writeTextAtomic(join2(this.options.dataDir, "cache", "success", `${key}.md`), artifact.markdown);
+    writeJsonAtomic(join(this.options.dataDir, "cache", "success", `${key}.json`), artifact);
+    writeTextAtomic(join(this.options.dataDir, "cache", "success", `${key}.md`), artifact.markdown);
   }
   readFailure(key, ttlMs) {
-    const file2 = join2(this.options.dataDir, "cache", "failure", `${key}.json`);
+    const file2 = join(this.options.dataDir, "cache", "failure", `${key}.json`);
     if (ttlMs <= 0 || !existsSync(file2)) return void 0;
     const ageMs = Date.now() - statSync(file2).mtimeMs;
     if (ageMs > ttlMs) return void 0;
     return readArtifact(file2, FailureArtifactSchema);
   }
   writeFailure(key, artifact) {
-    writeJsonAtomic(join2(this.options.dataDir, "cache", "failure", `${key}.json`), artifact);
-    writeTextAtomic(join2(this.options.dataDir, "cache", "failure", `${key}.md`), artifact.markdown);
+    writeJsonAtomic(join(this.options.dataDir, "cache", "failure", `${key}.json`), artifact);
+    writeTextAtomic(join(this.options.dataDir, "cache", "failure", `${key}.md`), artifact.markdown);
   }
   clear(kind) {
     this.ensureDirs();
     const kinds = kind === "all" ? ["success", "failure"] : [kind];
     for (const item of kinds) {
-      rmDirContents(join2(this.options.dataDir, "cache", item));
+      rmDirContents(join(this.options.dataDir, "cache", item));
     }
   }
 };
 function readArtifact(file2, schema) {
   try {
-    const parsed = JSON.parse(readFileSync2(file2, "utf8"));
+    const parsed = JSON.parse(readFileSync(file2, "utf8"));
     const result = schema.safeParse(parsed);
     return result.success ? result.data : void 0;
   } catch {
@@ -25123,7 +25745,7 @@ function writeTextAtomic(file2, text) {
 function rmDirContents(dir) {
   mkdirSync(dir, { recursive: true });
   for (const name of readdirSyncSafe(dir)) {
-    rmSyncSafe(join2(dir, name));
+    rmSyncSafe(join(dir, name));
   }
 }
 function readdirSyncSafe(dir) {
@@ -25139,6 +25761,113 @@ function rmSyncSafe(path) {
   } catch {
     return;
   }
+}
+
+// src/config/load-config.ts
+import { readFileSync as readFileSync2 } from "node:fs";
+import { homedir } from "node:os";
+import { join as join2 } from "node:path";
+var pluginConfigKey = "claude-vision-bridge@brein-claude-tools";
+function splitCsv(value) {
+  return (configuredValue(value) ?? "").split(",").map((item) => item.trim()).filter((item) => item.length > 0);
+}
+function normalizeProviderOrder(value) {
+  return splitCsv(value).map((item) => item.toLowerCase().replace(/-/g, "_"));
+}
+function boolEnv(value, fallback) {
+  const configured = configuredValue(value);
+  if (configured === void 0) return fallback;
+  return configured === "1" || configured.toLowerCase() === "true";
+}
+function numEnv(value, fallback) {
+  const parsed = Number(configuredValue(value));
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+function configuredValue(value) {
+  if (value === void 0 || value === "") return void 0;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  if (typeof value !== "string") return void 0;
+  if (/^\$\{[A-Z0-9_]+\}$/.test(value)) return void 0;
+  return value;
+}
+function loadConfig(env = process.env) {
+  const settingsOptions = readClaudeSettingsPluginOptions(env);
+  const providerOrder = normalizeProviderOrder(pluginOption(env, settingsOptions, "provider_order"));
+  const parsedProviderOrder = providerOrder.length > 0 ? providerOrder : void 0;
+  const allowRemoteFallback = boolEnv(pluginOption(env, settingsOptions, "allow_remote_fallback"), false);
+  return PluginConfigSchema.parse({
+    pluginRoot: configuredValue(env.CLAUDE_PLUGIN_ROOT) ?? process.cwd(),
+    pluginDataDir: configuredValue(env.CLAUDE_VISION_PLUGIN_DATA) ?? configuredValue(env.CLAUDE_PLUGIN_DATA) ?? ".vision-data",
+    providerOrder: parsedProviderOrder,
+    allowRemoteFallback,
+    allowHttpUrls: boolEnv(pluginOption(env, settingsOptions, "allow_http_urls"), false),
+    allowPrivateNetworkUrls: boolEnv(pluginOption(env, settingsOptions, "allow_private_network_urls"), false),
+    allowedDirectories: splitCsv(pluginOption(env, settingsOptions, "allowed_directories")),
+    deniedDirectories: splitCsv(pluginOption(env, settingsOptions, "denied_directories")),
+    maxImageBytes: numEnv(pluginOption(env, settingsOptions, "max_image_bytes"), 10485760),
+    hookTimeoutMs: numEnv(pluginOption(env, settingsOptions, "hook_timeout_ms"), 3e4),
+    providerTimeoutMs: numEnv(pluginOption(env, settingsOptions, "provider_timeout_ms"), 2e4),
+    mcpTimeoutMs: numEnv(pluginOption(env, settingsOptions, "mcp_timeout_ms"), 6e4),
+    maxOutputChars: numEnv(pluginOption(env, settingsOptions, "max_output_chars"), 8e3),
+    mcpAnalyzeCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_analyze_command")) ?? "analyze",
+    mcpDoctorCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_doctor_command")) ?? "doctor",
+    mcpCleanCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_clean_command")) ?? "clean",
+    mcpToolsCommand: configuredValue(pluginOption(env, settingsOptions, "mcp_tools_command")) ?? "tools",
+    providers: {
+      ollama: {
+        id: "ollama",
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "ollama_base_url")) ?? "http://127.0.0.1:11434/v1",
+        model: configuredValue(pluginOption(env, settingsOptions, "ollama_model")) ?? "llava",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "ollama_api_key")),
+        enabled: true,
+        remote: false
+      },
+      omlx: {
+        id: "omlx",
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "omlx_base_url")) ?? "http://127.0.0.1:8000/v1",
+        model: configuredValue(pluginOption(env, settingsOptions, "omlx_model")) ?? "mlx-vlm",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "omlx_api_key")),
+        enabled: true,
+        remote: false
+      },
+      llama_cpp: {
+        id: "llama_cpp",
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_base_url")) ?? "http://127.0.0.1:8080/v1",
+        model: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_model")) ?? "llava",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "llama_cpp_api_key")),
+        enabled: true,
+        remote: false
+      },
+      remote_openai: {
+        id: "remote_openai",
+        baseUrl: configuredValue(pluginOption(env, settingsOptions, "remote_openai_base_url")) ?? "",
+        model: configuredValue(pluginOption(env, settingsOptions, "remote_openai_model")) ?? "",
+        apiKey: configuredValue(pluginOption(env, settingsOptions, "remote_openai_api_key")),
+        enabled: allowRemoteFallback,
+        remote: true
+      }
+    }
+  });
+}
+function pluginOption(env, settingsOptions, optionName) {
+  const envName = `CLAUDE_PLUGIN_OPTION_${optionName.toUpperCase()}`;
+  return configuredValue(env[envName]) ?? settingsOptions[optionName];
+}
+function readClaudeSettingsPluginOptions(env) {
+  try {
+    const home = configuredValue(env.HOME) ?? homedir();
+    const settings = JSON.parse(readFileSync2(join2(home, ".claude", "settings.json"), "utf8"));
+    const configs = settings.pluginConfigs ?? {};
+    return configs[pluginConfigKey]?.options ?? findVisionBridgeOptions(configs) ?? {};
+  } catch {
+    return {};
+  }
+}
+function findVisionBridgeOptions(configs) {
+  for (const [key, value] of Object.entries(configs)) {
+    if (key.startsWith("claude-vision-bridge@") && value.options) return value.options;
+  }
+  return void 0;
 }
 
 // src/core/vision-service.ts
@@ -25607,6 +26336,9 @@ var extToMime = /* @__PURE__ */ new Map([
   [".bmp", "image/bmp"],
   [".svg", "image/svg+xml"]
 ]);
+function supportedImageExtensions() {
+  return [...extToMime.keys()];
+}
 function mimeForExtension(path) {
   return extToMime.get(extname(path).toLowerCase());
 }
@@ -26255,31 +26987,338 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   });
 }
 
-// src/bin/cc-vision-doctor.ts
-async function main2() {
-  const config2 = loadConfig();
-  const providers = buildProviders(config2);
-  const health = [];
-  for (const provider of providers) {
-    health.push(await provider.healthCheck());
+// src/sources/extract-from-prompt.ts
+var urlPattern = "https?:\\/\\/[^\\s\"'`<>)]+";
+var imageChipPattern = "\\[Image\\s+#\\d+\\]";
+function extractSourcesFromPrompt(prompt) {
+  const sources = [];
+  const seen = /* @__PURE__ */ new Set();
+  const pattern = sourcePattern();
+  for (const match of prompt.matchAll(pattern)) {
+    const url2 = match[1];
+    const imageChip = match[2];
+    const path = match[3] ?? match[4] ?? match[5] ?? match[6];
+    if (url2) {
+      const cleanedUrl = stripTrailingPunctuation(url2);
+      addUnique(sources, seen, { type: "url", url: cleanedUrl, origin: "hook" }, `url:${cleanedUrl}`);
+      continue;
+    }
+    if (imageChip) {
+      addUnique(sources, seen, { type: "clipboard", origin: "hook" }, "clipboard");
+      continue;
+    }
+    if (path) {
+      const cleanedPath = stripTrailingPunctuation(path);
+      addUnique(sources, seen, { type: "path", path: cleanedPath, origin: "hook" }, `path:${cleanedPath}`);
+    }
   }
-  process.stdout.write(
-    `${JSON.stringify(
-      sanitizeDoctorOutput({
-        version: "0.1.5",
-        providerOrder: config2.providerOrder,
-        remoteFallback: config2.allowRemoteFallback,
-        pluginDataDir: config2.pluginDataDir,
-        providers: config2.providers,
-        health
-      }),
-      null,
-      2
-    )}
-`
+  return sources;
+}
+function sourcePattern() {
+  const extensions = supportedImageExtensions().map(escapeRegExp).join("|");
+  const imagePath = `(?:${extensions})`;
+  const doubleQuotedPath = `"([^"]+?${imagePath})"`;
+  const singleQuotedPath = `'([^']+?${imagePath})'`;
+  const backtickPath = "`([^`]+?" + imagePath + ")`";
+  const plainPath = `([^\\s"'\`<>),;:]+?${imagePath})`;
+  return new RegExp(
+    [
+      `(${urlPattern})`,
+      `(${imageChipPattern})`,
+      doubleQuotedPath,
+      singleQuotedPath,
+      backtickPath,
+      plainPath
+    ].join("|"),
+    "gi"
   );
 }
-main2().catch((error51) => {
-  console.error(error51 instanceof Error ? error51.message : String(error51));
-  process.exit(1);
-});
+function stripTrailingPunctuation(value) {
+  return value.replace(/[),.;:]+$/g, "");
+}
+function addUnique(sources, seen, source, key) {
+  if (seen.has(key)) return;
+  seen.add(key);
+  sources.push(source);
+}
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// src/command/manual-mcp-command.ts
+var defaultImagePrompt = "Describe the image for a coding agent.";
+async function executeManualMcpCommand(input, dependencies = { createSession: createInMemorySession }) {
+  const session = await dependencies.createSession();
+  try {
+    const listed = await session.listTools();
+    const parsed = parseManualMcpCommand({
+      commandArgs: input.commandArgs,
+      originalPrompt: input.originalPrompt,
+      config: input.config,
+      availableToolNames: listed.tools.map((tool) => tool.name)
+    });
+    if (parsed.kind === "list-tools") return renderToolList(listed.tools);
+    const result = await session.callTool({
+      name: parsed.toolName,
+      arguments: parsed.arguments
+    });
+    return renderToolResult(parsed.toolName, result);
+  } finally {
+    await session.close();
+  }
+}
+function parseManualMcpCommand(input) {
+  const { token, remainder } = splitFirstToken(input.commandArgs);
+  if (!token) throw new Error(manualMcpUsage(input.config));
+  if (input.availableToolNames.includes(token)) {
+    return parseExactTool(token, remainder, input);
+  }
+  if (token === input.config.mcpToolsCommand) {
+    requireNoArguments(remainder, token);
+    return { kind: "list-tools" };
+  }
+  if (token === input.config.mcpAnalyzeCommand) {
+    requireAvailableTool("analyze_image", input.availableToolNames);
+    return parseAnalyze(remainder, input);
+  }
+  if (token === input.config.mcpDoctorCommand) {
+    requireAvailableTool("doctor_providers", input.availableToolNames);
+    requireNoArguments(remainder, token);
+    return { kind: "call-tool", toolName: "doctor_providers", arguments: {} };
+  }
+  if (token === input.config.mcpCleanCommand) {
+    requireAvailableTool("clear_vision_cache", input.availableToolNames);
+    return {
+      kind: "call-tool",
+      toolName: "clear_vision_cache",
+      arguments: { kind: parseCacheKind(remainder) }
+    };
+  }
+  throw new Error(`Unknown Vision Bridge MCP tool or alias: ${token}`);
+}
+function parseExactTool(toolName, remainder, input) {
+  if (toolName === "analyze_image") return parseAnalyze(remainder, input);
+  if (toolName === "doctor_providers") {
+    requireNoArguments(remainder, toolName);
+    return { kind: "call-tool", toolName, arguments: {} };
+  }
+  if (toolName === "clear_vision_cache") {
+    return {
+      kind: "call-tool",
+      toolName,
+      arguments: { kind: parseCacheKind(remainder) }
+    };
+  }
+  return {
+    kind: "call-tool",
+    toolName,
+    arguments: parseJsonArguments(remainder)
+  };
+}
+function parseAnalyze(remainder, input) {
+  let sources = extractSourcesFromPrompt(remainder);
+  if (sources.length === 0) {
+    sources = extractSourcesFromPrompt(input.originalPrompt);
+  }
+  if (sources.length === 0) {
+    throw new Error("Manual analyze requires one image source: a pasted image, image path, or image URL.");
+  }
+  if (sources.length !== 1) {
+    throw new Error("Manual analyze requires exactly one image source.");
+  }
+  const source = sources[0];
+  const question = stripSourceFromQuestion(remainder, source);
+  const prompt = question || defaultImagePrompt;
+  return {
+    kind: "call-tool",
+    toolName: "analyze_image",
+    arguments: {
+      source: toMcpToolSource(source),
+      mode: inferVisionMode(prompt),
+      prompt
+    }
+  };
+}
+function splitFirstToken(value) {
+  const trimmed = value.trim();
+  if (!trimmed) return { token: "", remainder: "" };
+  const whitespaceIndex = trimmed.search(/\s/);
+  if (whitespaceIndex === -1) return { token: trimmed, remainder: "" };
+  return {
+    token: trimmed.slice(0, whitespaceIndex),
+    remainder: trimmed.slice(whitespaceIndex).trim()
+  };
+}
+function parseCacheKind(value) {
+  const kind = value.trim() || "all";
+  if (kind === "all" || kind === "success" || kind === "failure") return kind;
+  throw new Error("Cache kind must be all, success, or failure.");
+}
+function parseJsonArguments(value) {
+  const trimmed = value.trim();
+  if (!trimmed) return {};
+  let parsed;
+  try {
+    parsed = JSON.parse(trimmed);
+  } catch {
+    throw new Error("Future MCP tool arguments must be valid JSON.");
+  }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error("Future MCP tool arguments must be one JSON object.");
+  }
+  return parsed;
+}
+function requireNoArguments(value, command) {
+  if (value.trim()) throw new Error(`${command} does not accept arguments.`);
+}
+function requireAvailableTool(toolName, availableToolNames) {
+  if (!availableToolNames.includes(toolName)) {
+    throw new Error(`Vision Bridge MCP tool is unavailable: ${toolName}`);
+  }
+}
+function stripSourceFromQuestion(value, source) {
+  let question = value;
+  if (source.type === "clipboard") {
+    question = question.replace(/\[Image\s+#\d+\]/gi, " ");
+  } else if (source.type === "url") {
+    question = question.replaceAll(source.url, " ");
+  } else if (source.type === "path") {
+    for (const reference of [`"${source.path}"`, `'${source.path}'`, `\`${source.path}\``, source.path]) {
+      question = question.replaceAll(reference, " ");
+    }
+  }
+  return question.replace(/\s+/g, " ").trim();
+}
+function toMcpToolSource(source) {
+  if (source.type === "clipboard") return { type: "clipboard" };
+  if (source.type === "url") return { type: "url", url: source.url };
+  if (source.type === "path") return { type: "path", path: source.path };
+  return { type: "base64", mime: source.mime, data: source.data };
+}
+function manualMcpUsage(config2) {
+  return [
+    "Usage: /claude-vision-bridge:mcp <subcommand> [arguments]",
+    `Subcommands: ${config2.mcpAnalyzeCommand}, ${config2.mcpDoctorCommand}, ${config2.mcpCleanCommand}, ${config2.mcpToolsCommand}`,
+    "Exact tools: analyze_image, doctor_providers, clear_vision_cache"
+  ].join("\n");
+}
+async function createInMemorySession() {
+  const server = await createMcpServer();
+  const client = new Client(
+    { name: "vision-bridge-manual-command", version: "0.1.5" },
+    { capabilities: {} }
+  );
+  const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
+  try {
+    await server.connect(serverTransport);
+    await client.connect(clientTransport);
+  } catch (error51) {
+    await Promise.allSettled([client.close(), server.close()]);
+    throw error51;
+  }
+  return {
+    listTools: () => client.listTools(),
+    callTool: async ({ name, arguments: args }) => {
+      const result = await client.callTool({ name, arguments: args });
+      return CallToolResultSchema.parse(result);
+    },
+    close: async () => {
+      await Promise.allSettled([client.close(), server.close()]);
+    }
+  };
+}
+function renderToolList(tools) {
+  const lines = tools.map(
+    (tool) => tool.description ? `- \`${tool.name}\`: ${tool.description}` : `- \`${tool.name}\``
+  );
+  return ["## Vision Bridge MCP Tools", "", ...lines].join("\n");
+}
+function renderToolResult(toolName, result) {
+  const textBlocks = result.content.filter((block) => {
+    return block.type === "text";
+  }).map((block) => block.text);
+  const body = textBlocks.length > 0 ? textBlocks.join("\n\n") : result.structuredContent ? JSON.stringify(result.structuredContent, null, 2) : "(Tool completed without text output.)";
+  return [`## Vision Bridge MCP Tool: ${toolName}`, "", body].join("\n");
+}
+
+// src/hook/manual-mcp-command-handler.ts
+var defaultDependencies = {
+  loadPluginConfig: () => loadConfig(),
+  executeCommand: (input) => executeManualMcpCommand(input)
+};
+function buildManualMcpHookOutput(additionalContext) {
+  return {
+    hookSpecificOutput: {
+      hookEventName: "UserPromptExpansion",
+      additionalContext
+    }
+  };
+}
+async function runManualMcpCommandHook(rawInput, dependencies = defaultDependencies) {
+  try {
+    const input = JSON.parse(rawInput);
+    validateInput(input);
+    const result = await dependencies.executeCommand({
+      commandArgs: input.command_args ?? "",
+      originalPrompt: input.prompt,
+      cwd: input.cwd,
+      config: dependencies.loadPluginConfig()
+    });
+    return jsonLine(
+      buildManualMcpHookOutput(`## Vision Bridge MCP Command Result
+
+${result}`)
+    );
+  } catch (error51) {
+    const message = error51 instanceof Error ? error51.message : String(error51);
+    return jsonLine(
+      buildManualMcpHookOutput(
+        `## Vision Bridge MCP Command Failed
+
+${message}
+
+The automatic image Hook was not run for this command.`
+      )
+    );
+  }
+}
+function validateInput(input) {
+  if (input.hook_event_name !== "UserPromptExpansion") {
+    throw new Error("Expected a UserPromptExpansion Hook event.");
+  }
+  if (input.expansion_type !== "slash_command") {
+    throw new Error("Manual MCP command must be invoked as a slash command.");
+  }
+  if (input.command_name !== "claude-vision-bridge:mcp") {
+    throw new Error(`Unexpected command name: ${input.command_name}`);
+  }
+  if (input.command_source !== "plugin") {
+    throw new Error("Manual MCP command must come from the claude-vision-bridge plugin.");
+  }
+}
+function jsonLine(value) {
+  return `${JSON.stringify(value)}
+`;
+}
+async function main2() {
+  const rawInput = readFileSync5(0, "utf8");
+  process.stdout.write(await runManualMcpCommandHook(rawInput));
+}
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main2().catch((error51) => {
+    process.stdout.write(
+      jsonLine(
+        buildManualMcpHookOutput(
+          `## Vision Bridge MCP Command Failed
+
+${error51 instanceof Error ? error51.message : String(error51)}`
+        )
+      )
+    );
+    process.exit(0);
+  });
+}
+export {
+  buildManualMcpHookOutput,
+  runManualMcpCommandHook
+};

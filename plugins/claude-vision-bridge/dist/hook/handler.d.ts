@@ -8,6 +8,7 @@ export interface UserPromptSubmitInput {
     permission_mode?: string;
 }
 export declare function parseHookInputToRequests(input: UserPromptSubmitInput): AnalyzeImageRequest[];
+export declare function isManualMcpCommandPrompt(prompt: string): boolean;
 export declare function buildHookOutput(markdowns: string[]): {
     suppressOutput: boolean;
     hookSpecificOutput: {
