@@ -1,10 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { AnalyzeImageRequestSchema } from '../core/schema.js';
-import type { AnalyzeImageRequest, AnalyzeImageResult, VisionMode } from '../core/types.js';
+import type { AnalyzeImageRequest, AnalyzeImageResult } from '../core/types.js';
 import { VisionService } from '../core/vision-service.js';
 import { loadConfig } from '../config/load-config.js';
 import { buildFailureArtifact } from '../failure/failure-artifact.js';
 import { extractSourcesFromPrompt } from '../sources/extract-from-prompt.js';
+import { inferVisionMode } from '../core/infer-vision-mode.js';
 
 export interface UserPromptSubmitInput {
   session_id: string;
@@ -16,10 +17,10 @@ export interface UserPromptSubmitInput {
 }
 
 export function parseHookInputToRequests(input: UserPromptSubmitInput): AnalyzeImageRequest[] {
-  if (hasExplicitMcpVisionIntent(input.prompt)) return [];
+  if (isManualMcpCommandPrompt(input.prompt)) return [];
 
   const sources = extractSourcesFromPrompt(input.prompt);
-  const mode = inferHookMode(input.prompt);
+  const mode = inferVisionMode(input.prompt);
   return sources.map((source) =>
     AnalyzeImageRequestSchema.parse({
       source,
@@ -31,18 +32,8 @@ export function parseHookInputToRequests(input: UserPromptSubmitInput): AnalyzeI
   );
 }
 
-function hasExplicitMcpVisionIntent(prompt: string): boolean {
-  if (/analyze_image|doctor_providers|clear_vision_cache|vision[-\s]?bridge/i.test(prompt)) return true;
-  return /\bmcp\b/i.test(prompt) && /(vision|image|screenshot|图片|截图|识图|视觉|看图)/i.test(prompt);
-}
-
-function inferHookMode(prompt: string): VisionMode {
-  if (/\bocr\b/i.test(prompt)) return 'ocr';
-  if (/(提取|识别|读取|转写).{0,12}(文字|文本)/.test(prompt)) return 'ocr';
-  if (/(看得见|可见).{0,8}(文字|文本)/.test(prompt)) return 'ocr';
-  if (/\b(extract|read|transcribe)\b.{0,24}\b(visible\s+)?text\b/i.test(prompt)) return 'ocr';
-  if (/\bvisible\s+text\b/i.test(prompt)) return 'ocr';
-  return 'general';
+export function isManualMcpCommandPrompt(prompt: string): boolean {
+  return /^\/claude-vision-bridge:mcp(?:\s|$)/i.test(prompt.trimStart());
 }
 
 export function buildHookOutput(markdowns: string[]): {

@@ -59,15 +59,34 @@ describe('Hook handler', () => {
     expect(requests.map((item) => item.maxOutputChars)).toEqual([8000, 8000, 8000]);
   });
 
-  it('skips automatic hook analysis when the prompt explicitly asks for MCP vision bridge', () => {
+  it('skips automatic analysis only for the exact manual MCP command', () => {
+    const manual = parseHookInputToRequests({
+      session_id: 's',
+      cwd: process.cwd(),
+      hook_event_name: 'UserPromptSubmit',
+      prompt: '/claude-vision-bridge:mcp analyze [Image #1] 读取文字',
+    });
+    const discussion = parseHookInputToRequests({
+      session_id: 's',
+      cwd: process.cwd(),
+      hook_event_name: 'UserPromptSubmit',
+      prompt: '这里 MCP analyze_image 报错了，请看 [Image #1]',
+    });
+
+    expect(manual).toEqual([]);
+    expect(discussion).toHaveLength(1);
+    expect(discussion[0].source).toEqual({ type: 'clipboard', origin: 'hook' });
+  });
+
+  it('does not skip other slash commands that include images', () => {
     const requests = parseHookInputToRequests({
       session_id: 's',
       cwd: process.cwd(),
       hook_event_name: 'UserPromptSubmit',
-      prompt: '请使用 vision-bridge 的 analyze_image 工具看 ./screen.png',
+      prompt: '/other-plugin:inspect [Image #1]',
     });
 
-    expect(requests).toEqual([]);
+    expect(requests).toHaveLength(1);
   });
 
   it('uses hook timeout and max output environment overrides', () => {
