@@ -47,6 +47,39 @@ describe('shared schemas', () => {
     expect(config.providerOrder).toEqual(['ollama', 'omlx', 'llama_cpp', 'remote_openai']);
   });
 
+  it('loads default and configured manual MCP command aliases', () => {
+    expect(PluginConfigSchema.parse({})).toMatchObject({
+      mcpAnalyzeCommand: 'analyze',
+      mcpDoctorCommand: 'doctor',
+      mcpCleanCommand: 'clean',
+      mcpToolsCommand: 'tools',
+    });
+
+    const config = loadConfig({
+      CLAUDE_PLUGIN_OPTION_MCP_ANALYZE_COMMAND: 'see',
+      CLAUDE_PLUGIN_OPTION_MCP_DOCTOR_COMMAND: 'health',
+      CLAUDE_PLUGIN_OPTION_MCP_CLEAN_COMMAND: 'purge',
+      CLAUDE_PLUGIN_OPTION_MCP_TOOLS_COMMAND: 'list',
+    });
+
+    expect(config).toMatchObject({
+      mcpAnalyzeCommand: 'see',
+      mcpDoctorCommand: 'health',
+      mcpCleanCommand: 'purge',
+      mcpToolsCommand: 'list',
+    });
+  });
+
+  it('rejects invalid or duplicate manual MCP aliases', () => {
+    expect(() => PluginConfigSchema.parse({ mcpAnalyzeCommand: 'two words' })).toThrow();
+    expect(() =>
+      PluginConfigSchema.parse({
+        mcpAnalyzeCommand: 'vision',
+        mcpDoctorCommand: 'vision',
+      }),
+    ).toThrow(/unique/i);
+  });
+
   it('rejects numeric config values outside the plugin manifest bounds', () => {
     expect(() => PluginConfigSchema.parse({ maxImageBytes: 1023 })).toThrow();
     expect(() => PluginConfigSchema.parse({ maxImageBytes: 52428801 })).toThrow();

@@ -138,49 +138,69 @@ const providerConfigSchema = z.object({
   enabled: z.boolean(),
   remote: z.boolean(),
 });
+const commandAliasSchema = z.string().regex(/^[a-z0-9][a-z0-9_-]*$/i);
 
-export const PluginConfigSchema = z.object({
-  pluginRoot: z.string().default(process.cwd()),
-  pluginDataDir: z.string().default('.vision-data'),
-  providerOrder: z.array(ProviderIdSchema).default([...providerOrderDefault]),
-  allowRemoteFallback: z.boolean().default(false),
-  allowHttpUrls: z.boolean().default(false),
-  allowPrivateNetworkUrls: z.boolean().default(false),
-  allowedDirectories: z.array(z.string()).default([]),
-  deniedDirectories: z.array(z.string()).default([]),
-  maxImageBytes: z.number().int().min(1024).max(52428800).default(10485760),
-  hookTimeoutMs: z.number().int().min(1000).max(30000).default(30000),
-  providerTimeoutMs: z.number().int().min(1000).max(60000).default(20000),
-  mcpTimeoutMs: z.number().int().min(1000).max(120000).default(60000),
-  maxOutputChars: z.number().int().min(1000).max(10000).default(8000),
-  providers: z.record(ProviderIdSchema, providerConfigSchema).default({
-    ollama: {
-      id: 'ollama',
-      baseUrl: 'http://127.0.0.1:11434/v1',
-      model: 'llava',
-      enabled: true,
-      remote: false,
-    },
-    omlx: {
-      id: 'omlx',
-      baseUrl: 'http://127.0.0.1:8000/v1',
-      model: 'mlx-vlm',
-      enabled: true,
-      remote: false,
-    },
-    llama_cpp: {
-      id: 'llama_cpp',
-      baseUrl: 'http://127.0.0.1:8080/v1',
-      model: 'llava',
-      enabled: true,
-      remote: false,
-    },
-    remote_openai: {
-      id: 'remote_openai',
-      baseUrl: '',
-      model: '',
-      enabled: false,
-      remote: true,
-    },
-  }),
-});
+export const PluginConfigSchema = z
+  .object({
+    pluginRoot: z.string().default(process.cwd()),
+    pluginDataDir: z.string().default('.vision-data'),
+    providerOrder: z.array(ProviderIdSchema).default([...providerOrderDefault]),
+    allowRemoteFallback: z.boolean().default(false),
+    allowHttpUrls: z.boolean().default(false),
+    allowPrivateNetworkUrls: z.boolean().default(false),
+    allowedDirectories: z.array(z.string()).default([]),
+    deniedDirectories: z.array(z.string()).default([]),
+    maxImageBytes: z.number().int().min(1024).max(52428800).default(10485760),
+    hookTimeoutMs: z.number().int().min(1000).max(30000).default(30000),
+    providerTimeoutMs: z.number().int().min(1000).max(60000).default(20000),
+    mcpTimeoutMs: z.number().int().min(1000).max(120000).default(60000),
+    maxOutputChars: z.number().int().min(1000).max(10000).default(8000),
+    mcpAnalyzeCommand: commandAliasSchema.default('analyze'),
+    mcpDoctorCommand: commandAliasSchema.default('doctor'),
+    mcpCleanCommand: commandAliasSchema.default('clean'),
+    mcpToolsCommand: commandAliasSchema.default('tools'),
+    providers: z.record(ProviderIdSchema, providerConfigSchema).default({
+      ollama: {
+        id: 'ollama',
+        baseUrl: 'http://127.0.0.1:11434/v1',
+        model: 'llava',
+        enabled: true,
+        remote: false,
+      },
+      omlx: {
+        id: 'omlx',
+        baseUrl: 'http://127.0.0.1:8000/v1',
+        model: 'mlx-vlm',
+        enabled: true,
+        remote: false,
+      },
+      llama_cpp: {
+        id: 'llama_cpp',
+        baseUrl: 'http://127.0.0.1:8080/v1',
+        model: 'llava',
+        enabled: true,
+        remote: false,
+      },
+      remote_openai: {
+        id: 'remote_openai',
+        baseUrl: '',
+        model: '',
+        enabled: false,
+        remote: true,
+      },
+    }),
+  })
+  .superRefine((config, context) => {
+    const aliases = [
+      config.mcpAnalyzeCommand,
+      config.mcpDoctorCommand,
+      config.mcpCleanCommand,
+      config.mcpToolsCommand,
+    ];
+    if (new Set(aliases).size !== aliases.length) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Manual MCP command aliases must be unique.',
+      });
+    }
+  });

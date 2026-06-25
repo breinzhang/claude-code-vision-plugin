@@ -153,6 +153,30 @@
       "min": 1000,
       "max": 120000
     },
+    "mcp_analyze_command": {
+      "type": "string",
+      "title": "Manual MCP analyze command",
+      "description": "Short subcommand mapped to analyze_image.",
+      "default": "analyze"
+    },
+    "mcp_doctor_command": {
+      "type": "string",
+      "title": "Manual MCP doctor command",
+      "description": "Short subcommand mapped to doctor_providers.",
+      "default": "doctor"
+    },
+    "mcp_clean_command": {
+      "type": "string",
+      "title": "Manual MCP clean command",
+      "description": "Short subcommand mapped to clear_vision_cache.",
+      "default": "clean"
+    },
+    "mcp_tools_command": {
+      "type": "string",
+      "title": "Manual MCP tools command",
+      "description": "Short subcommand that lists available MCP tools.",
+      "default": "tools"
+    },
     "max_output_chars": {
       "type": "number",
       "title": "Maximum output characters",

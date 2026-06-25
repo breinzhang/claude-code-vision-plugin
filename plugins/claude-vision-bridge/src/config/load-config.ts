@@ -56,6 +56,14 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): PluginConfig {
     providerTimeoutMs: numEnv(pluginOption(env, settingsOptions, 'provider_timeout_ms'), 20000),
     mcpTimeoutMs: numEnv(pluginOption(env, settingsOptions, 'mcp_timeout_ms'), 60000),
     maxOutputChars: numEnv(pluginOption(env, settingsOptions, 'max_output_chars'), 8000),
+    mcpAnalyzeCommand:
+      configuredValue(pluginOption(env, settingsOptions, 'mcp_analyze_command')) ?? 'analyze',
+    mcpDoctorCommand:
+      configuredValue(pluginOption(env, settingsOptions, 'mcp_doctor_command')) ?? 'doctor',
+    mcpCleanCommand:
+      configuredValue(pluginOption(env, settingsOptions, 'mcp_clean_command')) ?? 'clean',
+    mcpToolsCommand:
+      configuredValue(pluginOption(env, settingsOptions, 'mcp_tools_command')) ?? 'tools',
     providers: {
       ollama: {
         id: 'ollama',
