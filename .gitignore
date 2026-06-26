@@ -1,5 +1,7 @@
 .DS_Store
 .worktrees/
+Docs/
+docs/
 node_modules/
 .test-tmp/
 *.log
